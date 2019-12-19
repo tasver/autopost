@@ -17,7 +17,6 @@ class User(db.Model, UserMixin):
     socials = db.relationship('Social', backref='owner', lazy=True)
     posts = db.relationship('Post', backref='author', lazy=True)
     projects = db.relationship('Project', backref='own_project', lazy=True)
-    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     admin = db.Column(db.Boolean())
 
     def __init__(self, username, email, password, admin=True):

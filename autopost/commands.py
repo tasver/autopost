@@ -19,8 +19,8 @@ def create_admin():
     click.echo('Hello! Run command ok before')
     username = "admin"
     admin = True
-    email = "admib@gmail.com"
-    password = "admin"
+    email = "admin@gmail.com"
+    password = bcrypt.generate_password_hash("admin").decode('utf-8')
     u = User(username=username, admin=admin, email=email, password=password)
     #print("superadmin created", u)
     db.session.add(u)
