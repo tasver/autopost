@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField
 from wtforms.validators import InputRequired, DataRequired, Length, Email, EqualTo, ValidationError
-from flaskblog.models import User
+from autopost.models import User
 from flask import flash
 
 from flask_ckeditor import CKEditorField
@@ -11,7 +11,7 @@ from flask_ckeditor import CKEditorField
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose, AdminIndexView
 from flask_admin.form import rules
-from flaskblog import bcrypt
+from autopost import bcrypt
 
 
 class RegistrationForm(FlaskForm):
@@ -43,9 +43,7 @@ class LoginForm(FlaskForm):
 class UpdateAccountForm(FlaskForm):
     username=StringField('Username', validators=[DataRequired(),Length(min=2,max=20)])
     email=StringField('Email', validators=[DataRequired(),Email()])
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','png'])])
     submit= SubmitField('Update')
-    about = CKEditorField('About', validators=[DataRequired(),Length(max=500)])
     new_password = PasswordField('New password',validators = [DataRequired()])
     passwordcheck = PasswordField('Old password',validators = [DataRequired()])
     def validate_username(self, username):
@@ -64,13 +62,6 @@ class PostForm(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
 
-class ProfileForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(),Length(min=2,max=20)])
-    picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','png'])])
-    follow = SubmitField('Follow')
-    unfollow = SubmitField('Unfollow')
-    about = TextAreaField('About', validators=[DataRequired(),Length(max=500)])
-    lastseen = DateTimeField('Lastseen', format='%Y-%m-%d %H:%M:%S', validators = [DataRequired()])
 
 class AdminUserCreateForm(FlaskForm):
     username = StringField('Username', [InputRequired()])

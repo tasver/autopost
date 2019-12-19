@@ -30,10 +30,10 @@ app.config['CKEDITOR_PKG_TYPE'] = 'basic'
 ckeditor = CKEditor(app)
 
 
-import flaskblog.forms as views
+import autopost.forms as views
 admin = Admin(app, index_view=views.MyAdminIndexView())
 admin.add_view(views.UserAdminView(views.User, db.session))
 
 
-from flaskblog import routes
+from autopost import routes
 

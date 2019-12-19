@@ -1,4 +1,4 @@
-from flaskblog import manager
+from autopost import manager
 
 if __name__  == '__main__':
     manager.run()
