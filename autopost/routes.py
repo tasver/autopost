@@ -1,7 +1,7 @@
 from flask import json,jsonify, render_template,url_for, flash, redirect, request,abort
 from autopost import app, db, bcrypt
 from PIL import Image
-from autopost.forms import AdminUserUpdateForm, AdminUserCreateForm, RegistrationForm, LoginForm, UpdateAccountForm, PostForm
+from autopost.forms import AddProject,AddSocial, AdminUserCreateForm, RegistrationForm, LoginForm, UpdateAccountForm, AddTask
 from autopost.models import User, Post
 from flask_login import login_user, current_user, logout_user,login_required
 import os
@@ -22,6 +22,50 @@ def home():
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
+
+
+@app.route("/add_task", methods=['GET', 'POST'])
+@login_required
+def add_task():
+    form = AddTask()
+    if form.validate_on_submit():
+        post = Post(title = form.title.data, content = form.content.data, \
+                    author= current_user, date_posted = form.date_posted.data, \
+                    image_file = form.image_file.data, tags = form.tags.data, \
+                    already_posted = form.already_posted.data,\
+                    )
+        db.session.add(post)
+        db.session.commit()
+        flash('Your task has been created!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
+
+@app.route("/add_project", methods=['GET', 'POST'])
+@login_required
+def add_project():
+    form = AddProject()
+    if form.validate_on_submit():
+        project = Project(name = form.name.data, own_projects = current_user)
+        db.session.add(project)
+        db.session.commit()
+        flash('Your task has been created!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_project.html', title='New Project', form = form, legend = 'New project')
+
+@app.route("/add_social", methods=['GET', 'POST'])
+@login_required
+def add_social():
+    form = AddSocial()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        social = Social(login = form.login.data, password = hashed_password, \
+                        type = form.type.data, owner= current_user)
+        db.session.add(social)
+        db.session.commit()
+        flash('Your task has been created!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_social.html', title='New social', form = form, legend = 'New social')
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:

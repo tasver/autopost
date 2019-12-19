@@ -1,7 +1,7 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField
+from wtforms import SelectField, widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField
 from wtforms.validators import InputRequired, DataRequired, Length, Email, EqualTo, ValidationError
 from autopost.models import User, Post, Project, Social
 from flask import flash, redirect, url_for
@@ -57,10 +57,34 @@ class UpdateAccountForm(FlaskForm):
             if user:
                 raise ValidationError('That email is taken. Please choose a different one.')
 
-class PostForm(FlaskForm):
+class AddTask(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
+    date_posted = DateTimeField('Date Posted', format='%Y-%m-%d %H:%M')
+    image_file = FileField('Choose picture', validators=[FileAllowed(['jpg','png'])])
+    tags = TextAreaField('Tags')
+    already_posted = BooleanField('Already Posted?')
+    #project_id = SelectField('Select project', choices=Project.name)
+
+    #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
+    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    submit = SubmitField('Add task')
+
+class AddProject(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
+    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    submit = SubmitField('Add Project')
+
+class AddSocial(FlaskForm):
+    login = StringField('Login', validators=[DataRequired()])
+    password = PasswordField('Password',validators = [DataRequired()])
+    type = StringField('Type social', validators=[DataRequired()])
+
+    #project_id = SelectField('Select project', choices=Project.name)
+
+    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    submit = SubmitField('Add task')
 
 
 class AdminUserCreateForm(FlaskForm):
