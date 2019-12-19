@@ -1,0 +1,19 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="row">
+    <h1>Flask-Admin Panel</h1>
+
+    <p>
+        <a class="btn btn-primary" href="/admin/user"><i class="glyphicon glyphicon-chevron-left"></i> Users Table</a>
+        <a class="btn btn-primary" href="/admin/post"><i class="glyphicon glyphicon-chevron-left"></i> Posts Table</a>
+        <a class="btn btn-primary" href="/admin/project"><i class="glyphicon glyphicon-chevron-left"></i> Projects Table</a>
+        <a class="btn btn-primary" href="/admin/social"><i class="glyphicon glyphicon-chevron-left"></i> Social Table</a>
+    </p>
+    <br>
+    <p>
+        <h3>If you wonna leave admin panel:</h3>
+    </p>
+    <a class="btn btn-primary" href="/"><i class="glyphicon glyphicon-chevron-left"></i> Back</a>
+</div>
+{% endblock body %}

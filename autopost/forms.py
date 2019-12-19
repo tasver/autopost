@@ -3,8 +3,8 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField
 from wtforms.validators import InputRequired, DataRequired, Length, Email, EqualTo, ValidationError
-from autopost.models import User
-from flask import flash
+from autopost.models import User, Post, Project, Social
+from flask import flash, redirect, url_for
 
 from flask_ckeditor import CKEditorField
 
@@ -67,13 +67,13 @@ class AdminUserCreateForm(FlaskForm):
     username = StringField('Username', [InputRequired()])
     password = PasswordField('Password', [InputRequired()])
     admin = BooleanField('Is Admin ?')
+    posts = StringField('Posts', [InputRequired()])
 class AdminUserUpdateForm(FlaskForm):
     username = StringField('Username', [InputRequired()])
     admin = BooleanField('Is Admin ?')
 
 
 class MyAdminIndexView(AdminIndexView):
-
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin()
 
@@ -88,8 +88,8 @@ class CKTextAreaField(TextAreaField):
 class UserAdminView(ModelView):
     column_searchable_list = ('username',)
     column_sortable_list = ('username', 'admin')
-    form_overrides = dict(about=CKEditorField)
-    create_template = 'edit.html'
+    #form_overrides = dict(about=CKEditorField)
+    create_template = 'create.html'
     edit_template = 'edit.html'
     #column_exclude_list = ('password',)
     #form_excluded_columns = ('password',)
@@ -99,7 +99,6 @@ class UserAdminView(ModelView):
 
     def scaffold_form(self):
         form_class = super(UserAdminView, self).scaffold_form()
-        form_class.password = PasswordField('Password')
         form_class.new_password = PasswordField('New Password')
         form_class.confirm = PasswordField('Confirm New Password')
         return form_class
@@ -113,9 +112,8 @@ class UserAdminView(ModelView):
         self.session.add(model)
         self._on_model_change(form, model, True)
         self.session.commit()
+        return redirect(url_for('home_admin'))
 
-    form_edit_rules = ('username', 'admin', 'email', 'about',rules.Header('Reset Password'),'new_password', 'confirm')
-    form_create_rules = ('username', 'admin', 'email', 'about', 'password')
 
     def update_model(self, form, model):
         form.populate_obj(model)
@@ -126,3 +124,67 @@ class UserAdminView(ModelView):
         self.session.add(model)
         self._on_model_change(form, model, False)
         self.session.commit()
+        return redirect(url_for('home_admin'))
+
+class PostAdminView(ModelView):
+    column_searchable_list = ('title',)
+    column_sortable_list = ('title', 'already_posted','date_posted')
+    #form_overrides = dict(about=CKEditorField)
+    create_template = 'create.html'
+    edit_template = 'edit.html'
+    #column_exclude_list = ('password',)
+    #form_excluded_columns = ('password',)
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin()
+
+    #def scaffold_form(self):
+    #    form_class = super(PostAdminView, self).scaffold_form()
+    #    form_class.password = PasswordField('Password')
+    #    form_class.new_password = PasswordField('New Password')
+    #    form_class.confirm = PasswordField('Confirm New Password')
+    #    return form_class
+
+    #def create_model(self, form):
+    #   model = self.model(
+    #       form.username.data, form.password.data, form.admin.data
+    #    )
+    #    form.populate_obj(model)
+    #    model.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+    #   self.session.add(model)
+     #   self._on_model_change(form, model, True)
+     #   self.session.commit()
+      #  return redirect(url_for('home_admin'))
+
+    #form_edit_rules = ('id', 'title', 'content', 'user_id')
+    #form_create_rules = ('id', 'title', 'content', 'user_id')
+
+    #def update_model(self, form, model):
+     #   form.populate_obj(model)
+      #  if form.new_password.data:
+       #     if form.new_password.data != form.confirm.data:
+        #        return flash('Passwords must match')
+         #   model.password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+      #  self.session.add(model)
+      #  self._on_model_change(form, model, False)
+      #  self.session.commit()
+      #  return redirect(url_for('home_admin'))
+
+
+class ProjectAdminView(ModelView):
+    create_template = 'create.html'
+    edit_template = 'edit.html'
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin()
+
+class SocialAdminView(ModelView):
+    #form_overrides = dict(about=CKEditorField)
+    create_template = 'create.html'
+    edit_template = 'edit.html'
+    #column_exclude_list = ('password',)
+    #form_excluded_columns = ('password',)
+
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin()

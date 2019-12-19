@@ -64,13 +64,17 @@ def account():
     form = UpdateAccountForm()
     if request.method == "POST" and form.validate():
         user = User.query.filter_by(email=form.email.data).first()
-        usernn = current_user.username
-        if user and bcrypt.check_password_hash(current_user.password, form.passwordcheck.data):
+
+        if bcrypt.check_password_hash(current_user.password, form.passwordcheck.data):
             hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
             current_user.password = hashed_password
-
             current_user.username = form.username.data
             current_user.email = form.email.data
+            user.password = hashed_password
+            db.session.commit()
+            flash('Success. You change your account', 'success')
+        else:
+            flash('Unsuccess. Please check correct of uor input data', 'danger')
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
@@ -97,15 +101,7 @@ def admin_login_required(func):
 @login_required
 @admin_login_required
 def home_admin():
-    return render_template('admin-home.html')
-
-
-class HelloView(BaseView):
-    @expose('/')
-    def index(self):
-        return self.render('some-template.html')
-    def is_accessible(self):
-        return current_user.is_authenticated() and current_user.is_admin()
+    return render_template('index.html')
 
 
 @app.route('/userr', methods=['GET'])
@@ -125,7 +121,6 @@ def get_all_users():
         user_data['admin'] = user.admin
         output.append(user_data)
 
-
     return jsonify({'users' : output})
 
 @app.route('/userr/<id>', methods=['GET'])
@@ -140,7 +135,6 @@ def get_one_user(id):
     user_data['email'] = user.email
     user_data['password'] = user.password.decode('utf-8')
     user_data['admin'] = user.admin
-    type2 = type(user_data)
     return jsonify({'user':user_data})
 
 @app.route('/userr', methods=['POST'])

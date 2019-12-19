@@ -33,6 +33,11 @@ ckeditor = CKEditor(app)
 import autopost.forms as views
 admin = Admin(app, index_view=views.MyAdminIndexView())
 admin.add_view(views.UserAdminView(views.User, db.session))
+admin.add_view(views.PostAdminView(views.Post, db.session))
+admin.add_view(views.ProjectAdminView(views.Project, db.session))
+admin.add_view(views.SocialAdminView(views.Social, db.session))
+
+
 
 
 from autopost import routes
