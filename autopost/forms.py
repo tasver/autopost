@@ -79,7 +79,9 @@ class AddProject(FlaskForm):
 class AddSocial(FlaskForm):
     login = StringField('Login', validators=[DataRequired()])
     password = PasswordField('Password',validators = [DataRequired()])
-    type = StringField('Type social', validators=[DataRequired()])
+    #type = StringField('Type', validators=[DataRequired()])
+    type = SelectField(u'Type', choices=[('Instagram', 'Instagram'),\
+                           ('Facebook', 'Facebook'), ('Twitter', 'Twitter')])
 
     #project_id = SelectField('Select project', choices=Project.name)
 
@@ -156,46 +158,13 @@ class PostAdminView(ModelView):
     #form_overrides = dict(about=CKEditorField)
     create_template = 'create.html'
     edit_template = 'edit.html'
-    #column_exclude_list = ('password',)
-    #form_excluded_columns = ('password',)
 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin()
 
-    #def scaffold_form(self):
-    #    form_class = super(PostAdminView, self).scaffold_form()
-    #    form_class.password = PasswordField('Password')
-    #    form_class.new_password = PasswordField('New Password')
-    #    form_class.confirm = PasswordField('Confirm New Password')
-    #    return form_class
-
-    #def create_model(self, form):
-    #   model = self.model(
-    #       form.username.data, form.password.data, form.admin.data
-    #    )
-    #    form.populate_obj(model)
-    #    model.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-    #   self.session.add(model)
-     #   self._on_model_change(form, model, True)
-     #   self.session.commit()
-      #  return redirect(url_for('home_admin'))
-
-    #form_edit_rules = ('id', 'title', 'content', 'user_id')
-    #form_create_rules = ('id', 'title', 'content', 'user_id')
-
-    #def update_model(self, form, model):
-     #   form.populate_obj(model)
-      #  if form.new_password.data:
-       #     if form.new_password.data != form.confirm.data:
-        #        return flash('Passwords must match')
-         #   model.password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
-      #  self.session.add(model)
-      #  self._on_model_change(form, model, False)
-      #  self.session.commit()
-      #  return redirect(url_for('home_admin'))
-
 
 class ProjectAdminView(ModelView):
+    column_searchable_list = ('name',)
     create_template = 'create.html'
     edit_template = 'edit.html'
 
@@ -203,11 +172,41 @@ class ProjectAdminView(ModelView):
         return current_user.is_authenticated and current_user.is_admin()
 
 class SocialAdminView(ModelView):
-    #form_overrides = dict(about=CKEditorField)
+    column_searchable_list = ('login',)
     create_template = 'create.html'
     edit_template = 'edit.html'
     #column_exclude_list = ('password',)
     #form_excluded_columns = ('password',)
+    form_overrides = dict(
+        type=SelectField
+    )
+    form_args = dict(
+        type=dict(
+            choices=[('Instagram', 'Instagram'),\
+                           ('Facebook', 'Facebook'), ('Twitter', 'Twitter')]
+        )
+    )
+    def create_model(self, form):
+
+        model = self.model(
+            login = form.login.data, password = form.password.data, \
+            type=dict(form.type.choices).get(form.type.data)
+        )
+        form.populate_obj(model)
+        model.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        self.session.add(model)
+        self._on_model_change(form, model, True)
+        self.session.commit()
+        return redirect(url_for('home_admin'))
+
+    def update_model(self, form, model):
+        form.populate_obj(model)
+        if form.password.data:
+            model.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        self.session.add(model)
+        self._on_model_change(form, model, False)
+        self.session.commit()
+        return redirect(url_for('home_admin'))
 
 
     def is_accessible(self):

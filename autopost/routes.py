@@ -2,7 +2,7 @@ from flask import json,jsonify, render_template,url_for, flash, redirect, reques
 from autopost import app, db, bcrypt
 from PIL import Image
 from autopost.forms import AddProject,AddSocial, AdminUserCreateForm, RegistrationForm, LoginForm, UpdateAccountForm, AddTask
-from autopost.models import User, Post
+from autopost.models import User, Post, Project, Social
 from flask_login import login_user, current_user, logout_user,login_required
 import os
 import secrets
@@ -45,7 +45,7 @@ def add_task():
 def add_project():
     form = AddProject()
     if form.validate_on_submit():
-        project = Project(name = form.name.data, own_projects = current_user)
+        project = Project(name = form.name.data, own_project = current_user)
         db.session.add(project)
         db.session.commit()
         flash('Your task has been created!', 'success')
@@ -57,9 +57,10 @@ def add_project():
 def add_social():
     form = AddSocial()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        social = Social(login = form.login.data, password = hashed_password, \
-                        type = form.type.data, owner= current_user)
+        #type2 = dict(form.type.choices).get(form.type.data)
+        #hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        social = Social(login=form.login.data, password=bcrypt.generate_password_hash(form.password.data).decode('utf-8')\
+                        ,owner=current_user,type=dict(form.type.choices).get(form.type.data))
         db.session.add(social)
         db.session.commit()
         flash('Your task has been created!', 'success')

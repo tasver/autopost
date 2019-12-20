@@ -19,6 +19,9 @@ class User(db.Model, UserMixin):
     projects = db.relationship('Project', backref='own_project', lazy=True)
     admin = db.Column(db.Boolean())
 
+    def __repr__(self):
+        return self.username
+
     def __init__(self, username, email, password, admin=True):
         self.username = username
         self.email = email
@@ -40,6 +43,8 @@ class Post(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    def __repr__(self):
+        return self.title
 
 
 class Social(db.Model):
@@ -50,6 +55,8 @@ class Social(db.Model):
     posts = db.relationship('Post', backref='soc', lazy=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    def __repr__(self):
+        return self.login
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,3 +64,5 @@ class Project(db.Model):
     socials = db.relationship('Social', backref='pr_owner', lazy=True)
     posts = db.relationship('Post', backref='pr_post', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    def __repr__(self):
+        return self.name
