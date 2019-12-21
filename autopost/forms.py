@@ -4,7 +4,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import SelectField, widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField
 from wtforms.validators import InputRequired, DataRequired, Length, Email, EqualTo, ValidationError
 from autopost.models import User, Post, Project, Social
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, Markup
 
 from flask_ckeditor import CKEditorField
 
@@ -175,6 +175,9 @@ class SocialAdminView(ModelView):
     column_searchable_list = ('login',)
     create_template = 'create.html'
     edit_template = 'edit.html'
+    details_template = 'details.html'
+    can_view_details = True
+    column_details_list = ('type','login','posts')
     #column_exclude_list = ('password',)
     #form_excluded_columns = ('password',)
     form_overrides = dict(
@@ -186,6 +189,55 @@ class SocialAdminView(ModelView):
                            ('Facebook', 'Facebook'), ('Twitter', 'Twitter')]
         )
     )
+
+    def _get_list_value(self, context, model, name, column_formatters,
+                    column_type_formatters):
+        """
+            Returns the value to be displayed.
+
+            :param context:
+                :py:class:`jinja2.runtime.Context` if available
+            :param model:
+                Model instance
+            :param name:
+                Field name
+            :param column_formatters:
+                column_formatters to be used.
+            :param column_type_formatters:
+                column_type_formatters to be used.
+        """
+        column_fmt = column_formatters.get(name)
+        if column_fmt is not None:
+            value = column_fmt(self, context, model, name)
+        else:
+            value = self._get_field_value(model, name)
+
+        choices_map = self._column_choices_map.get(name, {})
+        if choices_map:
+            return choices_map.get(value) or value
+
+        type_fmt = None
+        for typeobj, formatter in column_type_formatters.items():
+            if isinstance(value, typeobj):
+                type_fmt = formatter
+                break
+        if type_fmt is not None:
+            value = type_fmt(self, value)
+        ### overwritten here
+        if name == 'posts':
+
+            html_string  = '<table>'
+            for item in value.split(','):
+                html_string += '<tr><td> {} </td></tr>'.format(item)
+            html_string += '</table>'
+
+            value = Markup(html_string)
+
+        return value
+
+
+
+
     def create_model(self, form):
 
         model = self.model(
@@ -211,3 +263,4 @@ class SocialAdminView(ModelView):
 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin()
+

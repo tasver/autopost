@@ -149,70 +149,78 @@ def home_admin():
     return render_template('index.html')
 
 
-@app.route('/userr', methods=['GET'])
-def get_all_users():
-    users = User.query.all()
+
+@app.route('/post_api', methods=['GET'])
+def get_all_posts():
+    posts = Post.query.all()
+    output=[]
+    for post in posts :
+        post_data = {}
+        post_data['title'] = post.title
+        post_data['content'] = post.content
+        post_data['date_posted'] = post.date_posted
+        post_data['image_file'] = post.image_file
+        post_data['tags'] = post.tags
+        #post_data['pr_post'] = post.pr_post
+        #post_data['soc'] = post.soc
+        #post_data['author'] = post.author
+        output.append(post_data)
+
+    return jsonify({'posts' : output})
+
+@app.route('/post_api/<id>', methods=['GET'])
+def get_one_post(id):
+    post = Post.query.filter_by(id=id).first()
+    if not post:
+        return jsonify({'message' : 'No post found'})
 
     output=[]
 
-    for user in users :
-        user_data = {}
-        user_data['username'] = user.username
-        user_data['email'] = user.email
-        if type(user.password)== str:
-            user_data['password'] = user.password
-        else:
-            user_data['password'] = user.password.decode('utf-8')
-        user_data['admin'] = user.admin
-        output.append(user_data)
+    post_data = {}
+    post_data['title'] = post.title
+    post_data['content'] = post.content
+    post_data['date_posted'] = post.date_posted
+    post_data['image_file'] = post.image_file
+    post_data['tags'] = post.tags
+    #post_data['pr_post'] = post.pr_post
+    #post_data['soc'] = post.soc
+    #post_data['author'] = post.author
+    output.append(post_data)
 
-    return jsonify({'users' : output})
+    return jsonify({'post' : output})
 
-@app.route('/userr/<id>', methods=['GET'])
-def get_one_user(id):
-    user = User.query.filter_by(id=id).first()
-
-    if not user:
-        return jsonify({'message' : 'No user found'})
-
-    user_data = {}
-    user_data['username'] = user.username
-    user_data['email'] = user.email
-    user_data['password'] = user.password.decode('utf-8')
-    user_data['admin'] = user.admin
-    return jsonify({'user':user_data})
-
-@app.route('/userr', methods=['POST'])
-def create_user():
+@app.route('/post_api', methods=['POST'])
+def create_post():
     data = request.get_json()
 
-    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-
-    new_user = User(username=data['username'], email=data['email'], \
-                    password = hashed_password, admin=False)
-    db.session.add(new_user)
+    new_post = Post(title=data['title'], content=data['content'], \
+                    date_posted=data['date_posted'], image_file=data['image_file'], \
+                    tags=data['tags'], #pr_post=data['pr_post'], \
+                    #soc=data['soc'],
+                    author=data['author'])
+    db.session.add(new_post)
     db.session.commit()
-    return jsonify({'message': 'New user created'})
+    return jsonify({'message': 'New post created'})
 
-@app.route('/userr/<id>', methods=['PUT'])
-def promote_user(id):
-    user = User.query.filter_by(id=id).first()
+@app.route('/post_api/<id>', methods=['PUT'])
+def promote_post(id):
+    post = Post.query.filter_by(id=id).first()
 
-    if not user:
-        return jsonify({'message' : 'No user found'})
+    if not post:
+        return jsonify({'message' : 'No post found'})
 
-    user.admin = True
+    post.already_posted = True
     db.session.commit()
 
-    return jsonify({'message' : 'The user has been promoted'})
+    return jsonify({'message' : 'The post has been already posted'})
 
-@app.route('/userr/<id>', methods=['DELETE'])
-def delete_user(id):
-    user = User.query.filter_by(id=id).first()
+@app.route('/post_api/<id>', methods=['DELETE'])
+def delete_post(id):
+    post = Post.query.filter_by(id=id).first()
 
-    if not user:
-        return jsonify({'message' : 'No user found'})
+    if not post:
+        return jsonify({'message' : 'No usposter found'})
 
-    db.session.delete(user)
+    db.session.delete(post)
     db.session.commit()
-    return jsonify({'users' : 'The user has been deleted'})
+    return jsonify({'posts' : 'The post has been deleted'})
