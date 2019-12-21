@@ -149,10 +149,45 @@ def home_admin():
     return render_template('index.html')
 
 
+#@app.route('/loginn')
+#def loginn():
+#    auth = request.authorization
+#    if not auth or not auth.username or not auth.password:
+#        return make_response('Coukd not verify', 401, {'WWW-Authenticate':'Basic realm-"Login required"'})
+#    user = User.query.filter_by(name = auth.username).first
+#    if not user:
+#        return make_response('Coukd not verify', 401, {'WWW-Authenticate':'Basic realm-"Login required"'})
+#    if chech_password_hash(user.password, auth.password):
+#        token = jwt.encode({'public_id':user.id, 'exp': datetime.datetime.utcnow() +
+#                            datetime.timedelta(mintes=30)}, app.config['SECRET_KEY'])
+#        return jsonify({'token' : token.decode('utf-8')})
+#    return make_response('Could not verify', 401, {'WWW-Authenticate':'Basic realm-"Login required"'})
+
+#def token_required(f):
+#    @wraps(f)
+#    def decorated(*args, **kwargs):
+#        token = none
+#        if 'x-access-token' in request.headers:
+#            token = request.headers['x-access-token']
+#            if not token:
+#                return jsonify({'message':'Token is missing!'}), 401
+#            try:
+#               data = jwt.decode(token, app.config['SECRET_KEY'])
+#                current_user = User.query.filter_by(id=data['id'].first())
+#            except:
+#               return jsonify({'message':'Token is invalid!'}), 401
+#            return f(current_user,*args,**kwargs)
+#    return decorated
+
+
 
 @app.route('/post_api', methods=['GET'])
+#@token_required
+#def get_all_posts(current_user):
 def get_all_posts():
+
     posts = Post.query.all()
+
     output=[]
     for post in posts :
         post_data = {}
@@ -161,19 +196,37 @@ def get_all_posts():
         post_data['date_posted'] = post.date_posted
         post_data['image_file'] = post.image_file
         post_data['tags'] = post.tags
-        #post_data['pr_post'] = post.pr_post
-        #post_data['soc'] = post.soc
-        #post_data['author'] = post.author
+        id = post.user_id
+        if id !=None:
+            user = User.query.filter_by(id=id).first()
+            post_data['author'] = user.username
+        else: pass
+        id = post.project_id
+        if id !=None:
+            project = Project.query.filter_by(id=id).first()
+            post_data['pr_post'] = project.name
+        else: pass
+
+        id = post.social_id
+        if id !=None:
+            social = Social.query.filter_by(id=id).first()
+            post_data['soc_type'] = social.type
+            post_data['soc_login'] = social.login
+            post_data['soc_pass'] = social.password
+        else: pass
+
         output.append(post_data)
 
     return jsonify({'posts' : output})
 
 @app.route('/post_api/<id>', methods=['GET'])
+#@token_required
+#def get_one_post(current_user, id):
 def get_one_post(id):
+
     post = Post.query.filter_by(id=id).first()
     if not post:
         return jsonify({'message' : 'No post found'})
-
     output=[]
 
     post_data = {}
@@ -182,28 +235,51 @@ def get_one_post(id):
     post_data['date_posted'] = post.date_posted
     post_data['image_file'] = post.image_file
     post_data['tags'] = post.tags
-    #post_data['pr_post'] = post.pr_post
-    #post_data['soc'] = post.soc
-    #post_data['author'] = post.author
-    output.append(post_data)
+    id = post.user_id
+    if id !=None:
+        user = User.query.filter_by(id=id).first()
+        post_data['author'] = user.username
+    else: pass
+    id = post.project_id
+    if id !=None:
+        project = Project.query.filter_by(id=id).first()
+        post_data['pr_post'] = project.name
+    else: pass
 
+    id = post.social_id
+    if id !=None:
+        social = Social.query.filter_by(id=id).first()
+        post_data['soc_type'] = social.type
+        post_data['soc_login'] = social.login
+        post_data['soc_pass'] = social.password
+    else: pass
+    output.append(post_data)
     return jsonify({'post' : output})
 
 @app.route('/post_api', methods=['POST'])
+#@token_required
+#def create_post(current_user):
 def create_post():
     data = request.get_json()
 
-    new_post = Post(title=data['title'], content=data['content'], \
-                    date_posted=data['date_posted'], image_file=data['image_file'], \
-                    tags=data['tags'], #pr_post=data['pr_post'], \
-                    #soc=data['soc'],
-                    author=data['author'])
+    new_post = Post(title=data['title'],
+                    content=data['content'],
+                    date_posted=data['date_posted'],
+                    image_file=data['image_file'],
+                    tags=data['tags'],
+                    social_id=data['social_id'],
+                    project_id = data['project_id'],
+                    user_id = data['user_id'])
     db.session.add(new_post)
     db.session.commit()
     return jsonify({'message': 'New post created'})
 
 @app.route('/post_api/<id>', methods=['PUT'])
+#@token_required
+#def promote_post(current_user,id):
 def promote_post(id):
+
+
     post = Post.query.filter_by(id=id).first()
 
     if not post:
@@ -215,7 +291,10 @@ def promote_post(id):
     return jsonify({'message' : 'The post has been already posted'})
 
 @app.route('/post_api/<id>', methods=['DELETE'])
+#@token_required
+#def delete_post(current_user,id):
 def delete_post(id):
+
     post = Post.query.filter_by(id=id).first()
 
     if not post:
@@ -224,3 +303,4 @@ def delete_post(id):
     db.session.delete(post)
     db.session.commit()
     return jsonify({'posts' : 'The post has been deleted'})
+

@@ -56,7 +56,7 @@ class Social(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
-        return self.login
+        return self.login +" social: "+ self.type
 
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -66,3 +66,5 @@ class Project(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
         return self.name
+
+
