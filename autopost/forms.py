@@ -156,6 +156,9 @@ class PostAdminView(ModelView):
     column_searchable_list = ('title',)
     column_sortable_list = ('title', 'already_posted','date_posted')
     details_template = 'details.html'
+
+    can_view_details = True
+    column_details_list = ('type','login','socials')
     #form_overrides = dict(about=CKEditorField)
     create_template = 'create.html'
     edit_template = 'edit.html'
