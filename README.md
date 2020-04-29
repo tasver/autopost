@@ -1,1 +1,1 @@
-# flaskblog
+# flaskautopost

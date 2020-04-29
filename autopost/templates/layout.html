@@ -37,8 +37,9 @@
 
                 <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
 
-                {% if current_user.is_admin %}
-                <a class="nav-item nav-link" href="{{ url_for('home_admin') }}">Admin</a>
+                {% if current_user.is_admin() %}
+                  <a class="nav-item nav-link .admin-view_add" href="{{ url_for('home_admin') }}">Admin</a>
+
                 {% endif %}
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Log out</a>
 

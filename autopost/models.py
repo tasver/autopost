@@ -9,6 +9,7 @@ import uuid
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
@@ -22,7 +23,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return self.username
 
-    def __init__(self, username, email, password, admin=True):
+    def __init__(self, username, email, password, admin=False):
         self.username = username
         self.email = email
         self.password = password
@@ -31,6 +32,10 @@ class User(db.Model, UserMixin):
     def is_admin(self):
         return self.admin
 
+association_table = db.Table('association_table', db.Model.metadata,
+    db.Column('Socials_id', db.Integer, db.ForeignKey('socials.id')),
+    db.Column('Post_id', db.Integer, db.ForeignKey('posts.id'))
+)
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,7 +46,10 @@ class Post(db.Model):
     tags = db.Column(db.Text)
     already_posted = db.Column(db.Boolean())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-    social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
+
+    __tablename__ = 'posts'
+
+    #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
         return self.title
@@ -52,7 +60,10 @@ class Social(db.Model):
     login = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     type = db.Column(db.String(30), nullable=False)
-    posts = db.relationship('Post', backref='soc', lazy=True)
+
+    __tablename__ = 'socials'
+    posts = db.relationship('Post', secondary=association_table)
+
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
