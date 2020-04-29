@@ -32,10 +32,23 @@ class User(db.Model, UserMixin):
     def is_admin(self):
         return self.admin
 
+class Project(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    socials = db.relationship('Social', backref='pr_owner', lazy=True)
+    posts = db.relationship('Post', backref='pr_post', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    def __repr__(self):
+        return self.name
+
+
+
+
 association_table = db.Table('association_table', db.Model.metadata,
     db.Column('Socials_id', db.Integer, db.ForeignKey('socials.id')),
     db.Column('Post_id', db.Integer, db.ForeignKey('posts.id'))
 )
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,7 +61,7 @@ class Post(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
     __tablename__ = 'posts'
-
+    socials = db.relationship('Social', secondary = association_table)
     #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
@@ -68,14 +81,4 @@ class Social(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
         return self.login +" social: "+ self.type
-
-class Project(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), nullable=False)
-    socials = db.relationship('Social', backref='pr_owner', lazy=True)
-    posts = db.relationship('Post', backref='pr_post', lazy=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    def __repr__(self):
-        return self.name
-
 
