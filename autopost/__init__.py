@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, make_response
 import uuid
-import json, facebook
+#import json, facebook
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
