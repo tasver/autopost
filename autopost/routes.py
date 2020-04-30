@@ -1,6 +1,7 @@
 from flask import json,jsonify, render_template,url_for, flash, redirect, request,abort
 from autopost import app, db, bcrypt
 from PIL import Image
+import json, facebook
 from autopost.forms import AddProject,AddSocial, AdminUserCreateForm, RegistrationForm, LoginForm, UpdateAccountForm, AddTask
 from autopost.models import User, Post, Project, Social
 from flask_login import login_user, current_user, logout_user,login_required
@@ -304,3 +305,17 @@ def delete_post(id):
     db.session.commit()
     return jsonify({'posts' : 'The post has been deleted'})
 
+
+
+
+
+#token = {"EAANLMYjSFFABABnUUBynulVVqCVPiMwKU5eF7iI6MWAsTVZBLERZCZCySWtBZCnIDM6TIMuwbxJrlm206y3xAfZAuaufZB5G0tE1LQcq29FkUAFOjyrdKA4do0LrcZCdRTgHqwiII3eGQh1yaByw0WInIOwnWTloUH3MOKb2mDNFNBLeViGYES50E5LZARdOCu8ZD"}
+#graph = facebook.GraphAPI(token)
+
+#fb = facebook.GraphAPI(access_token=token)
+#fb.put_object(parent_object='105020864533772', connection_name='feed',message = 'tHIS IS a new message' )
+
+
+#fields = ['id, name','posts']
+#profile = fb.get_object('105020864533772',fields=fields)
+#print(json.dumps(profile,indent=4))
