@@ -38,12 +38,12 @@ admin.add_view(views.PostAdminView(views.Post, db.session))
 admin.add_view(views.ProjectAdminView(views.Project, db.session))
 admin.add_view(views.SocialAdminView(views.Social, db.session))
 
-token = {"EAALXfsrsP9IBAHx6ynvs54cMyZAQPrEnUraLGZBo1i6z73gcbRvFGcegQq2GYmRkVrEyeziZBS5PsBZB8NYLHPl5v2wdRd7jwFOabmDMuwka1rzpeqhWhSLhmczAGdMjjH3W6oE97DgD69hG9ivSyjZBkkLWMUWRyp4sbCtmMwYpQ7xSS5AE3aPrwmybRGpFlyqfU121uxKc8mBy7RTYuyZB6Oa0sNB0dMuTcN9QxN5BKdE2nu0cTg"}
-graph = facebook.GraphAPI(token)
+#token = {"EAALXfsrsP9IBAHx6ynvs54cMyZAQPrEnUraLGZBo1i6z73gcbRvFGcegQq2GYmRkVrEyeziZBS5PsBZB8NYLHPl5v2wdRd7jwFOabmDMuwka1rzpeqhWhSLhmczAGdMjjH3W6oE97DgD69hG9ivSyjZBkkLWMUWRyp4sbCtmMwYpQ7xSS5AE3aPrwmybRGpFlyqfU121uxKc8mBy7RTYuyZB6Oa0sNB0dMuTcN9QxN5BKdE2nu0cTg"}
+#graph = facebook.GraphAPI(token)
 
-fields = ['email, name']
-profile = graph.get_object('me',fields=fields)
-print(json.dumps(profile,indent=4))
+#fields = ['email, name']
+#profile = graph.get_object('me',fields=fields)
+#print(json.dumps(profile,indent=4))
 
 
 from autopost import routes
