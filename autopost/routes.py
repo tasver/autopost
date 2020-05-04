@@ -1,4 +1,4 @@
-from flask import json,jsonify, render_template,url_for, flash, redirect, request,abort
+from flask import json,jsonify, render_template,url_for, flash, redirect, request,abort, session
 from autopost import app, db, bcrypt
 from PIL import Image
 import json, facebook
@@ -13,6 +13,12 @@ import shutil
 from functools import wraps
 from flask_admin import BaseView, expose
 import uuid
+import boto3
+from autopost.settings import S3_BUCKET,S3_KEY,S3_SECRET
+from botocore.exceptions import ClientError
+import logging
+from autopost.resources import get_bucket, get_buckets_list
+from pathlib import Path
 
 
 @app.route("/")
@@ -25,14 +31,34 @@ def about():
     return render_template('about.html', title='About')
 
 
+
+
 @app.route("/add_task", methods=['GET', 'POST'])
 @login_required
 def add_task():
     form = AddTask()
     if form.validate_on_submit():
+        if form.image_file.data:
+            file = request.files['image_file']
+            nameee = request.files['image_file'].filename
+            extensions = Path(nameee).suffixes
+            ext = "".join(extensions)
+            random_hex = str(secrets.token_hex(10))
+            usern = str(current_user.username)
+            name_file = usern + "/"+ random_hex + ext
+
+            my_bucket = get_bucket()
+            my_bucket.Object(name_file).put(Body=file)
+
+            file_path = "s3://autopost-dyploma/" + name_file
+            file_path_2 = "https://s3.console.aws.amazon.com/s3/object/autopost-dyploma/" + name_file
+
+        else:
+            file_path = "no file"
+
         post = Post(title = form.title.data, content = form.content.data, \
                     author= current_user, date_posted = form.date_posted.data, \
-                    image_file = form.image_file.data, tags = form.tags.data, \
+                    image_file = file_path, tags = form.tags.data, \
                     already_posted = form.already_posted.data,\
                     )
         db.session.add(post)
