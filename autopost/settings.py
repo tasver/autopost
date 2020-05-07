@@ -12,4 +12,5 @@ S3_SECRET = os.environ.get('S3_SECRET')
 CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH')
 GOOGLE_CHROME_BIN = os.environ.get('GOOGLE_CHROME_BIN')
 
+
 #PATH = os.environ.get('PATH')
