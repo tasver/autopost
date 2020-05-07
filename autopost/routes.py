@@ -19,6 +19,11 @@ from botocore.exceptions import ClientError
 import logging
 from autopost.resources import get_bucket, get_buckets_list
 from pathlib import Path
+from time import sleep
+import time
+from autopost.test_bot import *
+from autopost import driver
+
 
 
 @app.route("/")
@@ -29,8 +34,6 @@ def home():
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
-
-
 
 
 @app.route("/add_task", methods=['GET', 'POST'])
@@ -63,6 +66,9 @@ def add_task():
                     )
         db.session.add(post)
         db.session.commit()
+        #test_publish = post.title + '/n'+ post.content + '/n/n'+post.tags
+        test_publish = post.content
+        publish_post(str(test_publish))
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')

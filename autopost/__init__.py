@@ -10,11 +10,22 @@ import os
 from flask_admin import Admin, BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_ckeditor import CKEditor
-
+from selenium import webdriver
 
 config_file='settings.py'
 app = Flask(__name__)
-#basedir = os.path.abspath(os.path.dirname(__file__))
+#basedir = os.path.abspath(os.path.dirname(__file__))'
+
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
+prefs = {"profile.default_content_setting_values.notifications" : 2}
+chrome_options.add_experimental_option("prefs",prefs)
+driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+
 
 app.config.from_pyfile(config_file)
 db = SQLAlchemy(app)
