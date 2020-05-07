@@ -68,7 +68,9 @@ def add_task():
         db.session.commit()
         #test_publish = post.title + '/n'+ post.content + '/n/n'+post.tags
         test_publish = post.content
+        facebook_login(facebook_login2,facebook_password2)
         publish_post(str(test_publish))
+        exit_driver()
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
