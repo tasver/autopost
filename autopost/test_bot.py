@@ -41,22 +41,22 @@ def facebook_login(login,password):
     time.sleep(2.5)
     facebook_login_element = driver.find_element_by_xpath(facebook_login_button)
     facebook_login_element.click()
-    time.sleep(3.3)
+    time.sleep(1.3)
     status = True
     return status
 
 def exit_driver():
-    time.sleep(3)
+    time.sleep(1)
     driver.close()
 
 
 def publish_post(status_message,url_image=None):
-    WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
+    WebDriverWait(driver, 1).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
 
     driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(2)
+    time.sleep(1)
     buttons = driver.find_elements_by_tag_name('button')
-    time.sleep(3)
+    time.sleep(2)
     for button in buttons:
         if button.text=='Опублікувати':
             button.click()
@@ -67,7 +67,7 @@ def publish_post(status_message,url_image=None):
         elif button.text=='Отправить':
             button.click()
             break
-    time.sleep(2)
+    time.sleep(1)
 
 def publish_post_public(url,status_message):
 
