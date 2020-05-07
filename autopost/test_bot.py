@@ -9,7 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 import time
 from bs4 import BeautifulSoup
-from autopost.settings import PATH
+#from autopost.settings import PATH
 import os
 
 #chrome_options = webdriver.ChromeOptions()
