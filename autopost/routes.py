@@ -23,6 +23,7 @@ from time import sleep
 import time
 from autopost.test_bot import *
 from autopost import driver
+from autopost.worker import *
 
 
 
@@ -75,8 +76,24 @@ def add_task():
             print(test)
         else:
             test = None
+        test_datetime = post.date_posted
+        take_day,take_time = test_datetime.split(' ')
+        year,month,day = take_day.split('-')
+        hour,minute = take_time.split(':')
+        print(test_datetime)
+        print(take_day)
+        print(take_time)
+        print(year)
+        print(month)
+        print(day)
+        print(hour)
+        print(minute)
 
-        facebook_create_post(facebook_login,facebook_password,test_publish,url_image=test)
+        test_job = queue.enqueue_at(datetime(year, month, day, hour, minute), facebook_create_post(facebook_login,facebook_password,test_publish,url_image=test))
+        print(test_job in queue)  # Outputs False as job is not enqueued
+
+        registry = ScheduledJobRegistry(queue=queue)
+        print(test_job in registry)
         #facebook_delete_post(facebook_login,facebook_password,0)
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
