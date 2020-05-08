@@ -46,7 +46,9 @@ def download(key):
     make_sure_path_exists('autopost/static/'+key_dir)
 
     s3.download_file(S3_BUCKET, key, 'autopost/static/' + key)
-    local_path = '/autopost/static/' + key
+    #local_path = '/autopost/static/' + key
+    make_sure_path_exists('tmp/'+key_dir)
+    local_path = '/tmp/' + key
     local_path_test = '/static/' + key
     templateDir = os.path.dirname(__file__)
     print(templateDir)

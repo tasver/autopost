@@ -93,7 +93,7 @@ def publish_post(driver,status_message,url_image=None):
         print(test)
         time.sleep(2)
         test.send_keys(url_image)
-        time.sleep(5)
+        time.sleep(2)
     buttons = driver.find_elements_by_tag_name('button')
     time.sleep(2)
     for button in buttons:
