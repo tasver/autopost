@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait,Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.file_detector import *
 from selenium.webdriver import ActionChains
 from autopost import driver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -22,13 +23,11 @@ facebook_password = './/*[@id="pass"]'
 facebook_login_button = './/*[@id="loginbutton"]'
 
 url = 'https://www.facebook.com/Test_dyploma-autopost-105020864533772/?modal=admin_todo_tour'
-status_message = 'HI, it is test5.21'
+status_message = 'HI, it is test1.58'
 facebook_login2 = 'bohdannavrotskyi@gmail.com'
 facebook_password2 = 'bodik_18'
 
-#driver = webdriver.Chrome(ChromeDriverManager().install())
 #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', chrome_options=chrome_options)
-#driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
 def facebook_login(login,password):
     status = False
@@ -47,14 +46,30 @@ def facebook_login(login,password):
 
 def exit_driver():
     time.sleep(1)
-    driver.close()
+    driver.quit()
 
 
 def publish_post(status_message,url_image=None):
     WebDriverWait(driver, 1).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
+    url_image_test = "/home/tasver/Pictures/test.png"
+
+    #file_input.send_keys("/home/tasver/Pictures/test.png")
+    # Generally it's better to wrap the file path in one of the methods
+    # in os.path to return the actual path to support cross OS testing.
+    # file_input.send_keys(os.path.abspath("path/to/profilepic.gif"))
 
     driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
     time.sleep(1)
+    s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
+    file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
+    #driver.file_detector = LocalFileDetector()
+    time.sleep(1)
+    #file_test.click()
+    test = driver.find_element_by_xpath("//input[@type='file']")
+    print(test)
+    time.sleep(1)
+    test.send_keys(s3_url)
+    time.sleep(5)
     buttons = driver.find_elements_by_tag_name('button')
     time.sleep(2)
     for button in buttons:
@@ -147,11 +162,11 @@ def delete_post(n):
 
 
 
-#facebook_login(facebook_login2,facebook_password2)
+facebook_login(facebook_login2,facebook_password2)
 #go_to_profile()
 #print(get_post(0))
 #delete_post(0)
 #publish_post_public(url,status_message)
 #print(get_all_posts())
-#publish_post("urec oluhec")
+publish_post("0300")
 #exit_driver()
