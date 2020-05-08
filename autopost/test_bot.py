@@ -90,12 +90,12 @@ def publish_post(driver,status_message,url_image=None):
         time.sleep(3)
     #file_test.click()
         test = driver.find_element_by_xpath("//input[@type='file']")
-        print(test)
+        #print(test)
         time.sleep(2)
         test.send_keys(url_image)
-        time.sleep(2)
+        time.sleep(4)
     buttons = driver.find_elements_by_tag_name('button')
-    time.sleep(2)
+    time.sleep(1)
     for button in buttons:
         if button.text=='Опублікувати':
             button.click()
