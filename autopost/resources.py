@@ -1,16 +1,16 @@
 import boto3
-from autopost.settings import S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from autopost.settings import S3_BUCKET, S3_KEY, S3_SECRET
 from flask import session,Response
 import os
 import errno
 from pathlib import Path
 
 def _get_s3_resource():
-    if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
+    if S3_KEY and S3_SECRET:
         return boto3.resource(
             's3',
-            AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID,
-            AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY
+            AWS_ACCESS_KEY_ID=S3_KEY,
+            AWS_SECRET_ACCESS_KEY=S3_SECRET
         )
     else:
         return boto3.resource('s3')
