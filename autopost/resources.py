@@ -43,13 +43,18 @@ def download(key):
     #file_obj = my_bucket.Object(key).get()
     s3 = boto3.client('s3')
     key_dir,key_name = key.split('/')
-    make_sure_path_exists('autopost/static/'+key_dir)
+    #make_sure_path_exists('autopost/static/'+key_dir)
 
-    s3.download_file(S3_BUCKET, key, 'autopost/static/' + key)
-    #local_path = '/autopost/static/' + key
     make_sure_path_exists('tmp/'+key_dir)
-    local_path = '/tmp/' + key
-    local_path_test = '/static/' + key
+    local_path = 'tmp/' + key
+
+
+    s3.download_file(S3_BUCKET, key, local_path)
+    #local_path = '/autopost/static/' + key
+
+
+    #local_path_test = '/static/' + key
+    local_path_test = local_path
     templateDir = os.path.dirname(__file__)
     print(templateDir)
     last_test = templateDir+local_path_test
