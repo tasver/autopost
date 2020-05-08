@@ -87,7 +87,7 @@ def publish_post(driver,status_message,url_image=None):
     if url_image!=None:
         file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
     #driver.file_detector = LocalFileDetector()
-        time.sleep(2)
+        time.sleep(1)
     #file_test.click()
         test = driver.find_element_by_xpath("//input[@type='file']")
         #print(test)
