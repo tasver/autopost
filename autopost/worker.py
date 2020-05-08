@@ -7,7 +7,6 @@ from rq.registry import ScheduledJobRegistry
 redis = Redis()
 
 redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:5000')
-redis_url2 = os.getenv()
 redis = redis.from_url(redis_url)
 
 queue = Queue(connection=redis)
