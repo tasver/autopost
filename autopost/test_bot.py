@@ -82,7 +82,7 @@ def publish_post(driver,status_message,url_image=None):
     # file_input.send_keys(os.path.abspath("path/to/profilepic.gif"))
 
     driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(2)
+    time.sleep(1.5)
     s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
     if url_image!=None:
         file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
