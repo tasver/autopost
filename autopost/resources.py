@@ -9,8 +9,8 @@ def _get_s3_resource():
     if S3_KEY and S3_SECRET:
         return boto3.resource(
             's3',
-            AWS_ACCESS_KEY_ID=S3_KEY,
-            AWS_SECRET_ACCESS_KEY=S3_SECRET
+            aws_access_key_id=S3_KEY,
+            aws_secret_access_key=S3_SECRET
         )
     else:
         return boto3.resource('s3')
