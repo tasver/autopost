@@ -1,4 +1,4 @@
-from flask import json,jsonify, render_template,url_for, flash, redirect, request,abort, session
+from flask import json,jsonify, render_template,url_for, flash, redirect, request,abort, session,Response
 from autopost import app, db, bcrypt
 from PIL import Image
 import json, facebook
@@ -17,7 +17,7 @@ import boto3
 from autopost.settings import S3_BUCKET,S3_KEY,S3_SECRET
 from botocore.exceptions import ClientError
 import logging
-from autopost.resources import get_bucket, get_buckets_list
+from autopost.resources import *
 from pathlib import Path
 from time import sleep
 import time
@@ -53,7 +53,8 @@ def add_task():
             my_bucket = get_bucket()
             my_bucket.Object(name_file).put(Body=file)
 
-            file_path = "s3://autopost-dyploma/" + name_file
+            #file_path = "s3://autopost-dyploma/" + name_file
+            file_path = name_file
             file_path_2 = "https://s3.console.aws.amazon.com/s3/object/autopost-dyploma/" + name_file
 
         else:
@@ -66,14 +67,22 @@ def add_task():
                     )
         db.session.add(post)
         db.session.commit()
-        #test_publish = post.title + '/n'+ post.content + '/n/n'+post.tags
-        test_publish = post.content
-        facebook_login(facebook_login2,facebook_password2)
-        publish_post(str(test_publish))
-        exit_driver()
+        test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
+        #test_publish = post.content
+        if post.image_file!=None or 'no file':
+            key = post.image_file
+            test = download(key)
+            print(test)
+        else:
+            test = None
+
+        facebook_create_post(facebook_login,facebook_password,test_publish,url_image=test)
+        #facebook_delete_post(facebook_login,facebook_password,0)
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
+
+
 
 @app.route("/add_project", methods=['GET', 'POST'])
 @login_required
@@ -83,6 +92,8 @@ def add_project():
         project = Project(name = form.name.data, own_project = current_user)
         db.session.add(project)
         db.session.commit()
+
+
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_project.html', title='New Project', form = form, legend = 'New project')
