@@ -14,7 +14,7 @@ from functools import wraps
 from flask_admin import BaseView, expose
 import uuid
 import boto3
-from autopost.settings import S3_BUCKET,S3_KEY,S3_SECRET
+#from autopost.settings import S3_BUCKET,S3_KEY,S3_SECRET
 from botocore.exceptions import ClientError
 import logging
 from autopost.resources import *
