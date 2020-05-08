@@ -23,7 +23,7 @@ from time import sleep
 import time
 from autopost.test_bot import *
 from autopost import driver
-from autopost.worker import *
+from worker import *
 
 
 
