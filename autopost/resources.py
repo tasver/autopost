@@ -56,8 +56,8 @@ def download(key):
     #os.makedirs("tmp/")
     local_path = os.path.join("tmp/", key)
 
-    print('local_path')
-    print(local_path)
+    #print('local_path')
+    #print(local_path)
     try:
         #s3.Bucket(S3_BUCKET).download_file(key, local_path)
         #s3.download_file(S3_BUCKET, key, local_path)
@@ -74,11 +74,11 @@ def download(key):
     #local_path_test = key_name
     templateDir = os.path.dirname(__file__)
     key_name_test = os.path.dirname(key_name)
-    print('key_name_test')
-    print(key_name_test)
+    #print('key_name_test')
+    #print(key_name_test)
     templateDir=templateDir[:-9]
-    print('templateDir')
-    print(templateDir)
+    #print('templateDir')
+    #print(templateDir)
     last_test = templateDir+local_path_test
     print('last_test')
     print(last_test)
