@@ -43,12 +43,12 @@ def download(key):
 
     my_bucket = get_bucket()
     #file_obj = my_bucket.Object(key).get()
-    #s3 = boto3.client('s3', region_name='us-west-2')
+    s3 = boto3.client('s3', region_name='us-west-2')
     key_dir,key_name = key.split('/')
     #make_sure_path_exists('autopost/static/'+key_dir)
     #s3 = _get_s3_resource()
 
-    s3 = boto3.client('s3')
+    #s3 = boto3.client('s3')
     #s3.download_file(BUCKET_NAME, BUCKET_FILE_NAME, LOCAL_FILE_NAME)
 
     #make_sure_path_exists('tmp/'+key_dir)
@@ -57,7 +57,7 @@ def download(key):
     print(local_path)
     try:
         #s3.Bucket(S3_BUCKET).download_file(key, local_path)
-        my_bucket.download_file(S3_BUCKET, key, key_name)
+        s3.download_file(S3_BUCKET, key, key_name)
         print('success download')
     except:
         print("The object does not exist.")
@@ -68,6 +68,9 @@ def download(key):
     #local_path_test = '/tmp/' + key
     local_path_test = key_name
     templateDir = os.path.dirname(__file__) + '/'
+    key_name_test = os.path.dirname(key_name)
+    print('key_name_test')
+    print(key_name_test)
     #templateDir=templateDir[:-9]
     print('templateDir')
     print(templateDir)
