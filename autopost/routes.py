@@ -77,7 +77,8 @@ def add_task():
         if post.image_file!=None:
             if post.image_file!="no file":
                 key = post.image_file
-                test = download(key)
+                #test = download(key)
+                test = key
                 #test = queue.enqueue(download, key)
                 print(test)
         else:

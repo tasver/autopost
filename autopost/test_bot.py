@@ -12,7 +12,7 @@ import time
 from bs4 import BeautifulSoup
 #from autopost.settings import PATH
 import os
-
+from autopost.resources import *
 #chrome_options = webdriver.ChromeOptions()
 #chrome_options.add_argument("--no-sandbox")
 #prefs = {"profile.default_content_setting_values.notifications" : 2}
@@ -75,6 +75,8 @@ def exit_driver(driver):
     driver.quit()
 
 def publish_post(driver,status_message,url_image=None):
+    time.sleep(2)
+    test_url_image = download(url_image)
     time.sleep(4)
     WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
     url_image_test = "/home/tasver/Pictures/test.png"
@@ -86,7 +88,7 @@ def publish_post(driver,status_message,url_image=None):
 
     driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
     time.sleep(2.5)
-    s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
+    #s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
     if url_image!=None:
         file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
     #driver.file_detector = LocalFileDetector()
@@ -95,7 +97,7 @@ def publish_post(driver,status_message,url_image=None):
         test = driver.find_element_by_xpath("//input[@type='file']")
         #print(test)
         time.sleep(3)
-        test.send_keys(url_image)
+        test.send_keys(test_url_image)
         time.sleep(7)
     buttons = driver.find_elements_by_tag_name('button')
     time.sleep(3)
