@@ -73,10 +73,11 @@ def add_task():
         db.session.commit()
         test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
         #test_publish = post.content
-        if post.image_file!=None or post.image_file!="no file":
-            key = post.image_file
-            test = download(key)
-            print(test)
+        if post.image_file!=None:
+            if post.image_file!="no file":
+                key = post.image_file
+                test = download(key)
+                print(test)
         else:
             test = None
        #test_datetime = post.date_posted

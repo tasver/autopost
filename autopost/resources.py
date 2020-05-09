@@ -56,7 +56,7 @@ def download(key):
 
     s3.download_file(S3_BUCKET, key, local_path)
     #local_path = '/autopost/static/' + key
-    time.sleep(5)
+    time.sleep(3)
 
     #local_path_test = '/static/' + key
     local_path_test = '/tmp/' + key
