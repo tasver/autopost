@@ -4,6 +4,7 @@ from flask import session,Response
 import os
 import errno
 from pathlib import Path
+import time
 
 def _get_s3_resource():
     if S3_KEY and S3_SECRET:
@@ -52,9 +53,10 @@ def download(key):
     print(local_path)
 
 
+
     s3.download_file(S3_BUCKET, key, local_path)
     #local_path = '/autopost/static/' + key
-
+    time.sleep(5)
 
     #local_path_test = '/static/' + key
     local_path_test = '/tmp/' + key
