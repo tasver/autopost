@@ -40,8 +40,8 @@ def make_sure_path_exists(path):
 
 def download(key):
 
-    #my_bucket = get_bucket()
-    #file_obj = my_bucket.Object(key).get()
+    my_bucket = get_bucket()
+    file_obj = my_bucket.Object(key).get()
     s3 = boto3.client('s3', region_name='us-west-2')
 
     key_dir,key_name = key.split('/')
@@ -56,7 +56,7 @@ def download(key):
 
     s3.download_file(S3_BUCKET, key, local_path)
     #local_path = '/autopost/static/' + key
-    time.sleep(3)
+    time.sleep(1)
 
     #local_path_test = '/static/' + key
     local_path_test = '/tmp/' + key
