@@ -73,6 +73,7 @@ def add_task():
         db.session.commit()
         test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
         #test_publish = post.content
+        test = None
         if post.image_file!=None:
             if post.image_file!="no file":
                 key = post.image_file
