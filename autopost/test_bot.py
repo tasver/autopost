@@ -26,8 +26,8 @@ facebook_login_button = './/*[@id="loginbutton"]'
 
 url = 'https://www.facebook.com/Test_dyploma-autopost-105020864533772/?modal=admin_todo_tour'
 status_message = 'HI, it is test1.58'
-facebook_login = 'bohdannavrotskyi@gmail.com'
-facebook_password = 'bodik_18'
+facebook_login = '380669288859'
+facebook_password = 'Kamaro123'
 
 #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', chrome_options=chrome_options)
 
