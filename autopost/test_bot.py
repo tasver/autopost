@@ -73,6 +73,7 @@ def exit_driver(driver):
     driver.quit()
 
 def publish_post(driver,status_message,url_image=None):
+    time.sleep(4)
     WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
     url_image_test = "/home/tasver/Pictures/test.png"
 
