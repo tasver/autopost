@@ -89,8 +89,9 @@ def add_task():
         print(hour)
         print(minute)
 
-        #test_job = queue.enqueue_at(datetime(year, month, day, hour, minute), facebook_create_post(facebook_login,facebook_password,test_publish,url_image=test))
-        #print(test_job in queue)  # Outputs False as job is not enqueued
+        queue = Queue(connection=conn)
+        test_job = queue.enqueue(facebook_create_post(facebook_login,facebook_password,test_publish,url_image=test))
+        print(test_job in queue)  # Outputs False as job is not enqueued
 
         #registry = ScheduledJobRegistry(queue=queue)
         #print(test_job in registry)
