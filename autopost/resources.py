@@ -63,7 +63,7 @@ def download(key):
 
     try:
         #s3.Bucket(S3_BUCKET).download_file(key, local_path)
-        s3.download_file(S3_BUCKET, key, local_path)
+        s3.download_file(S3_BUCKET, key, key)
         print('success download')
     except:
         print("The object does not exist.")
