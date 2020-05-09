@@ -37,6 +37,8 @@ def about():
     return render_template('about.html', title='About')
 
 
+queue = Queue(connection=conn)
+
 @app.route("/add_task", methods=['GET', 'POST'])
 @login_required
 def add_task():
