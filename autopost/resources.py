@@ -42,7 +42,7 @@ def make_sure_path_exists(path):
 def download(key):
 
     my_bucket = get_bucket()
-    #file_obj = my_bucket.Object(key).get()
+    file_obj = my_bucket.Object(key).get()
     s3 = boto3.client('s3', region_name='us-west-2')
     key_dir,key_name = key.split('/')
     #make_sure_path_exists('autopost/static/'+key_dir)
@@ -60,7 +60,10 @@ def download(key):
     print(local_path)
     try:
         #s3.Bucket(S3_BUCKET).download_file(key, local_path)
-        s3.download_file(S3_BUCKET, key, local_path)
+        #s3.download_file(S3_BUCKET, key, local_path)
+        with open(key_name, 'wb') as data:
+            s3.download_fileobj(S3_BUCKET, key, data)
+
         print('success download')
     except:
         print("The object does not exist.")

@@ -78,8 +78,8 @@ def add_task():
         if post.image_file!=None and post.image_file!="no file":
             key = post.image_file
             test = download(key)
-            test2 = download('test/600fffdef71457efeecc.png')
-            test3=download('s3://dyploma-autopost2/test/098bd2beadf444c5519e.png')
+            #test2 = download('test/600fffdef71457efeecc.png')
+            #test3=download('s3://dyploma-autopost2/test/098bd2beadf444c5519e.png')
             #test = key
             #test = queue.enqueue(download, key)
             print(test)
