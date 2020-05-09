@@ -50,7 +50,7 @@ def download(key):
     print(key_dir)
     print(key_name)
     #make_sure_path_exists('tmp/'+key_dir)
-    local_path = 'tmp/' + key_name
+    local_path = './tmp' + key_name
     print('local_path')
     print(local_path)
     s3.download_file(S3_BUCKET, key, local_path)
@@ -59,6 +59,7 @@ def download(key):
 
     #local_path_test = '/static/' + key
     local_path_test = '/tmp/' + key_name
+    #teeeeest = './tmp'
     templateDir = os.path.dirname(__file__)
     templateDir=templateDir[:-9]
     print('templateDir')
@@ -66,7 +67,7 @@ def download(key):
     last_test = templateDir+local_path_test
     print('last_test')
     print(last_test)
-    return last_test
+    return local_path
     #my_bucket.download_file(S3_BUCKET, 'admin/55b455a0e864370d76da.png', 'admin/55b455a0e864370d76da.png')
 
     #return Response(
