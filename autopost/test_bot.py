@@ -13,6 +13,8 @@ from bs4 import BeautifulSoup
 #from autopost.settings import PATH
 import os
 from autopost.resources import *
+
+
 #chrome_options = webdriver.ChromeOptions()
 #chrome_options.add_argument("--no-sandbox")
 #prefs = {"profile.default_content_setting_values.notifications" : 2}
@@ -60,13 +62,13 @@ def facebook_login_fun(driver,login,password):
     driver.get('https://www.facebook.com')
     facebook_email_element = driver.find_element_by_xpath(facebook_email)
     facebook_email_element.send_keys(facebook_login)
-    time.sleep(2.4)
+    time.sleep(1.1)
     facebook_password_element = driver.find_element_by_xpath(facebook_password_field)
     facebook_password_element.send_keys(facebook_password)
-    time.sleep(2.5)
+    time.sleep(1.2)
     facebook_login_element = driver.find_element_by_xpath(facebook_login_button)
     facebook_login_element.click()
-    time.sleep(2.3)
+    time.sleep(1.3)
     status = True
     return status
 
@@ -75,10 +77,10 @@ def exit_driver(driver):
     driver.quit()
 
 def publish_post(driver,status_message,url_image=None):
-    time.sleep(2)
+    time.sleep(1)
     test_url_image = download(url_image)
-    time.sleep(4)
-    WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
+    time.sleep(2)
+    WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
     url_image_test = "/home/tasver/Pictures/test.png"
 
     #file_input.send_keys("/home/tasver/Pictures/test.png")
@@ -87,20 +89,20 @@ def publish_post(driver,status_message,url_image=None):
     # file_input.send_keys(os.path.abspath("path/to/profilepic.gif"))
 
     driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(2.5)
+    time.sleep(1.5)
     #s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
     if url_image!=None:
         file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
     #driver.file_detector = LocalFileDetector()
-        time.sleep(3)
+        time.sleep(1)
     #file_test.click()
         test = driver.find_element_by_xpath("//input[@type='file']")
         #print(test)
-        time.sleep(3)
+        time.sleep(1)
         test.send_keys(test_url_image)
-        time.sleep(7)
+        time.sleep(3)
     buttons = driver.find_elements_by_tag_name('button')
-    time.sleep(3)
+    time.sleep(1)
     for button in buttons:
         if button.text=='Опублікувати':
             button.click()
@@ -111,7 +113,7 @@ def publish_post(driver,status_message,url_image=None):
         elif button.text=='Отправить':
             button.click()
             break
-    time.sleep(2)
+    time.sleep(1)
 
 def publish_post_public(driver,url,status_message):
 

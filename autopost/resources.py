@@ -44,23 +44,17 @@ def download(key):
     #my_bucket = get_bucket()
     #file_obj = my_bucket.Object(key).get()
     #s3 = boto3.client('s3', region_name='us-west-2')
-
     key_dir,key_name = key.split('/')
     #make_sure_path_exists('autopost/static/'+key_dir)
-
     #s3 = _get_s3_resource()
 
     s3 = boto3.client('s3')
     #s3.download_file(BUCKET_NAME, BUCKET_FILE_NAME, LOCAL_FILE_NAME)
 
-
-
     #make_sure_path_exists('tmp/'+key_dir)
     local_path = 'tmp/' + key
     print('local_path')
     print(local_path)
-
-
     try:
         #s3.Bucket(S3_BUCKET).download_file(key, local_path)
         s3.download_file(S3_BUCKET, key, key_name)
@@ -70,8 +64,6 @@ def download(key):
 
     #s3.download_file(S3_BUCKET, key, local_path)
     #local_path = '/autopost/static/' + key
-
-
     #local_path_test = '/static/' + key
     #local_path_test = '/tmp/' + key
     local_path_test = key_name
@@ -84,49 +76,3 @@ def download(key):
     print(last_test)
     return last_test
     #my_bucket.download_file(S3_BUCKET, 'admin/55b455a0e864370d76da.png', 'admin/55b455a0e864370d76da.png')
-
-    #return Response(
-    #    file_obj['Body'].read(),
-    #    mimetype='text/plain',
-    #    headers={"Content-Disposition": "attachment;filename={}".format(key)}
-    #)
-"""
-def download(key):
-
-    my_bucket = get_bucket()
-    file_obj = my_bucket.Object(key).get()
-    s3 = boto3.client('s3', region_name='us-west-2')
-    print('key')
-    print(key)
-    key_dir,key_name = key.split('/')
-    #make_sure_path_exists('autopost/static/'+key_dir)
-    print(key_dir)
-    print(key_name)
-    #make_sure_path_exists('tmp/'+key_dir)
-    local_path = './tmp/' + key_name
-    print('local_path')
-    print(local_path)
-    s3.download_file(S3_BUCKET, key, local_path)
-    #local_path = '/autopost/static/' + key
-    time.sleep(1)
-
-    #local_path_test = '/static/' + key
-    local_path_test = '/tmp/' + key_name
-    #teeeeest = './tmp'
-    templateDir = os.path.dirname(__file__)
-    templateDir=templateDir[:-9]
-    print('templateDir')
-    print(templateDir)
-    last_test = templateDir+local_path_test
-    print('last_test')
-    print(last_test)
-    return local_path
-    #my_bucket.download_file(S3_BUCKET, 'admin/55b455a0e864370d76da.png', 'admin/55b455a0e864370d76da.png')
-
-    #return Response(
-    #    file_obj['Body'].read(),
-    #    mimetype='text/plain',
-    #    headers={"Content-Disposition": "attachment;filename={}".format(key)}
-    #)
-
-"""
