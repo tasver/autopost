@@ -50,7 +50,7 @@ def download(key):
     print(key_dir)
     print(key_name)
     #make_sure_path_exists('tmp/'+key_dir)
-    local_path = './tmp' + key_name
+    local_path = './tmp/' + key_name
     print('local_path')
     print(local_path)
     s3.download_file(S3_BUCKET, key, local_path)
