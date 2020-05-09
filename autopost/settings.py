@@ -8,6 +8,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 S3_BUCKET = os.environ.get('S3_BUCKET')
 S3_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
 S3_SECRET = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
 REDISTOGO_URL=os.environ.get('REDISTOGO_URL')
 
 CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH')
