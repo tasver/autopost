@@ -49,8 +49,8 @@ def download(key):
     #make_sure_path_exists('autopost/static/'+key_dir)
     print(key_dir)
     print(key_name)
-    make_sure_path_exists('/tmp/'+key_dir)
-    local_path = 'tmp/' + key
+    #make_sure_path_exists('tmp/'+key_dir)
+    local_path = 'tmp/' + key_name
     print('local_path')
     print(local_path)
     s3.download_file(S3_BUCKET, key, local_path)
@@ -58,7 +58,7 @@ def download(key):
     time.sleep(1)
 
     #local_path_test = '/static/' + key
-    local_path_test = '/tmp/' + key
+    local_path_test = 'tmp/' + key_name
     templateDir = os.path.dirname(__file__)
     templateDir=templateDir[:-9]
     print('templateDir')
