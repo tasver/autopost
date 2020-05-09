@@ -3,6 +3,8 @@ from autopost.settings import S3_BUCKET, S3_KEY, S3_SECRET
 from flask import session,Response
 import os
 import errno
+import botocore
+
 from pathlib import Path
 
 def _get_s3_resource():
@@ -41,18 +43,30 @@ def download(key):
 
     #my_bucket = get_bucket()
     #file_obj = my_bucket.Object(key).get()
-    s3 = boto3.client('s3', region_name='us-west-2')
+    #s3 = boto3.client('s3', region_name='us-west-2')
 
     key_dir,key_name = key.split('/')
     #make_sure_path_exists('autopost/static/'+key_dir)
 
-    make_sure_path_exists('tmp/'+key_dir)
+    s3 = _get_s3_resource()
+
+
+
+
+
+    #make_sure_path_exists('tmp/'+key_dir)
     local_path = 'tmp/' + key
     print('local_path')
     print(local_path)
 
 
-    s3.download_file(S3_BUCKET, key, local_path)
+    try:
+        s3.Bucket(S3_BUCKET).download_file(key, local_path)
+        print('success download')
+    except:
+        print("The object does not exist.")
+
+    #s3.download_file(S3_BUCKET, key, local_path)
     #local_path = '/autopost/static/' + key
 
 
