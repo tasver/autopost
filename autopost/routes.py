@@ -56,7 +56,7 @@ def add_task():
             name_file = usern + "/"+ random_hex + ext
 
             my_bucket = get_bucket()
-            my_bucket.Object(name_file).put(ACL='public-read', Body=file,Metadata={'Content-Type':'image/png'})
+            my_bucket.Object(name_file).put(ACL='public-read', Body=file,ContentType ='image/png')
 
             #file_path = "s3://autopost-dyploma/" + name_file
             file_path = name_file
