@@ -4,7 +4,6 @@ from flask import session,Response
 import os
 import errno
 from pathlib import Path
-import time
 
 def _get_s3_resource():
     if S3_KEY and S3_SECRET:
@@ -38,6 +37,43 @@ def make_sure_path_exists(path):
         if exception.errno != errno.EEXIST:
             raise
 
+def download(key):
+
+    #my_bucket = get_bucket()
+    #file_obj = my_bucket.Object(key).get()
+    s3 = boto3.client('s3', region_name='us-west-2')
+
+    key_dir,key_name = key.split('/')
+    #make_sure_path_exists('autopost/static/'+key_dir)
+
+    make_sure_path_exists('tmp/'+key_dir)
+    local_path = 'tmp/' + key
+    print('local_path')
+    print(local_path)
+
+
+    s3.download_file(S3_BUCKET, key, local_path)
+    #local_path = '/autopost/static/' + key
+
+
+    #local_path_test = '/static/' + key
+    local_path_test = '/tmp/' + key
+    templateDir = os.path.dirname(__file__)
+    templateDir=templateDir[:-9]
+    print('templateDir')
+    print(templateDir)
+    last_test = templateDir+local_path_test
+    print('last_test')
+    print(last_test)
+    return last_test
+    #my_bucket.download_file(S3_BUCKET, 'admin/55b455a0e864370d76da.png', 'admin/55b455a0e864370d76da.png')
+
+    #return Response(
+    #    file_obj['Body'].read(),
+    #    mimetype='text/plain',
+    #    headers={"Content-Disposition": "attachment;filename={}".format(key)}
+    #)
+"""
 def download(key):
 
     my_bucket = get_bucket()
@@ -76,3 +112,4 @@ def download(key):
     #    headers={"Content-Disposition": "attachment;filename={}".format(key)}
     #)
 
+"""
