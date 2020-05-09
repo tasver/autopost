@@ -62,13 +62,13 @@ def facebook_login_fun(driver,login,password):
     driver.get('https://www.facebook.com')
     facebook_email_element = driver.find_element_by_xpath(facebook_email)
     facebook_email_element.send_keys(facebook_login)
-    time.sleep(1.1)
+    time.sleep(1.5)
     facebook_password_element = driver.find_element_by_xpath(facebook_password_field)
     facebook_password_element.send_keys(facebook_password)
-    time.sleep(1.2)
+    time.sleep(1.5)
     facebook_login_element = driver.find_element_by_xpath(facebook_login_button)
     facebook_login_element.click()
-    time.sleep(1.3)
+    time.sleep(1.5)
     status = True
     return status
 
@@ -77,7 +77,7 @@ def exit_driver(driver):
     driver.quit()
 
 def publish_post(driver,status_message,url_image=None):
-    time.sleep(1)
+    time.sleep(2)
     #test_url_image = download(url_image)
     #time.sleep(2)
     WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
@@ -89,16 +89,16 @@ def publish_post(driver,status_message,url_image=None):
     # file_input.send_keys(os.path.abspath("path/to/profilepic.gif"))
 
     driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(0.5)
+    time.sleep(1)
     #s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
     if url_image!=None:
         file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
     #driver.file_detector = LocalFileDetector()
-        time.sleep(0.5)
+        time.sleep(1)
     #file_test.click()
         test = driver.find_element_by_xpath("//input[@type='file']")
         #print(test)
-        time.sleep(1)
+        time.sleep(2)
         test.send_keys(url_image)
         time.sleep(6)
     buttons = driver.find_elements_by_tag_name('button')
@@ -113,7 +113,7 @@ def publish_post(driver,status_message,url_image=None):
         elif button.text=='Отправить':
             button.click()
             break
-    time.sleep(0.5)
+    time.sleep(1)
 
 def publish_post_public(driver,url,status_message):
 
