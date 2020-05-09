@@ -58,7 +58,7 @@ def download(key):
     time.sleep(1)
 
     #local_path_test = '/static/' + key
-    local_path_test = 'tmp/' + key_name
+    local_path_test = '/tmp/' + key_name
     templateDir = os.path.dirname(__file__)
     templateDir=templateDir[:-9]
     print('templateDir')
