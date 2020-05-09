@@ -61,6 +61,7 @@ def add_task():
             #file_path = "s3://autopost-dyploma/" + name_file
             file_path = name_file
             file_path_2 = "https://s3.console.aws.amazon.com/s3/object/autopost-dyploma/" + name_file
+            file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
 
         else:
             file_path = "no file"
@@ -80,9 +81,9 @@ def add_task():
             #test = download(key)
             #test2 = download('test/600fffdef71457efeecc.png')
             #testt5 = 's3://dyploma-autopost2/test/26e1b96cbf41076b19ac.png'
-            test_test = file_path_2
+            test = file_path_3
             #test3=download('s3://dyploma-autopost2/test/098bd2beadf444c5519e.png')
-            test = key
+            #test = key
             #test = queue.enqueue(download, key)
             print(test)
         else:
