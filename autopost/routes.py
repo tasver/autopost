@@ -38,7 +38,7 @@ def about():
     return render_template('about.html', title='About')
 
 
-queue = Queue(connection=conn)
+
 
 @app.route("/add_task", methods=['GET', 'POST'])
 @login_required
@@ -73,7 +73,7 @@ def add_task():
         db.session.commit()
         test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
         #test_publish = post.content
-        if post.image_file!=None or 'no file':
+        if post.image_file!=None or post.image_file!="no file":
             key = post.image_file
             test = download(key)
             print(test)
