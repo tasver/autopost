@@ -7,7 +7,7 @@ from autopost.settings import REDISTOGO_URL
 
 redis = Redis()
 
-redis_url = os.getenv(REDISTOGO_URL, 'redis://localhost:5000')
+redis_url = os.getenv(REDISTOGO_URL)
 redis = redis.from_url(redis_url)
 
 queue = Queue(connection=redis)
