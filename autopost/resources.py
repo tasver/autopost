@@ -51,9 +51,9 @@ def download(key):
     #s3 = boto3.client('s3')
     #s3.download_file(BUCKET_NAME, BUCKET_FILE_NAME, LOCAL_FILE_NAME)
 
-    #make_sure_path_exists('tmp/'+key_dir)
+    make_sure_path_exists('tmp/'+key_dir)
     #local_path = 'tmp/' + key
-    os.makedirs("tmp/")
+    #os.makedirs("tmp/")
     local_path = os.path.join("tmp/", key)
 
     print('local_path')
