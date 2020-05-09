@@ -53,7 +53,7 @@ def download(key):
 
     make_sure_path_exists('tmp/'+key_dir)
     #local_path = 'tmp/' + key
-    local_path = os.path.join("/tmp/", key)
+    local_path = os.path.join("tmp/", key)
     print('local_path')
     print(local_path)
     try:
