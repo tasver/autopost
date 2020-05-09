@@ -58,13 +58,13 @@ def facebook_login_fun(driver,login,password):
     driver.get('https://www.facebook.com')
     facebook_email_element = driver.find_element_by_xpath(facebook_email)
     facebook_email_element.send_keys(facebook_login)
-    time.sleep(1.4)
+    time.sleep(2.4)
     facebook_password_element = driver.find_element_by_xpath(facebook_password_field)
     facebook_password_element.send_keys(facebook_password)
-    time.sleep(1.5)
+    time.sleep(2.5)
     facebook_login_element = driver.find_element_by_xpath(facebook_login_button)
     facebook_login_element.click()
-    time.sleep(1.3)
+    time.sleep(2.3)
     status = True
     return status
 
@@ -87,15 +87,15 @@ def publish_post(driver,status_message,url_image=None):
     if url_image!=None:
         file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
     #driver.file_detector = LocalFileDetector()
-        time.sleep(1)
+        time.sleep(2)
     #file_test.click()
         test = driver.find_element_by_xpath("//input[@type='file']")
         #print(test)
-        time.sleep(1)
+        time.sleep(2)
         test.send_keys(url_image)
-        time.sleep(4)
+        time.sleep(7)
     buttons = driver.find_elements_by_tag_name('button')
-    time.sleep(1)
+    time.sleep(2)
     for button in buttons:
         if button.text=='Опублікувати':
             button.click()
