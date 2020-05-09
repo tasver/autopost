@@ -75,7 +75,7 @@ def download(key):
     #local_path_test = '/static/' + key
     #local_path_test = '/tmp/' + key
     local_path_test = key_name
-    templateDir = os.path.dirname(__file__)
+    templateDir = os.path.dirname(__file__) + '/'
     #templateDir=templateDir[:-9]
     print('templateDir')
     print(templateDir)
