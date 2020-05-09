@@ -89,18 +89,18 @@ def publish_post(driver,status_message,url_image=None):
     # file_input.send_keys(os.path.abspath("path/to/profilepic.gif"))
 
     driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(1.5)
+    time.sleep(0.5)
     #s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
     if url_image!=None:
         file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
     #driver.file_detector = LocalFileDetector()
-        time.sleep(1)
+        time.sleep(0.5)
     #file_test.click()
         test = driver.find_element_by_xpath("//input[@type='file']")
         #print(test)
         time.sleep(1)
         test.send_keys(url_image)
-        time.sleep(3)
+        time.sleep(6)
     buttons = driver.find_elements_by_tag_name('button')
     time.sleep(1)
     for button in buttons:
@@ -113,7 +113,7 @@ def publish_post(driver,status_message,url_image=None):
         elif button.text=='Отправить':
             button.click()
             break
-    time.sleep(1)
+    time.sleep(0.5)
 
 def publish_post_public(driver,url,status_message):
 

@@ -51,13 +51,13 @@ def download(key):
     #s3 = boto3.client('s3')
     #s3.download_file(BUCKET_NAME, BUCKET_FILE_NAME, LOCAL_FILE_NAME)
 
-    #make_sure_path_exists('tmp/'+key_dir)
+    make_sure_path_exists('tmp/'+key_dir)
     local_path = 'tmp/' + key
     print('local_path')
     print(local_path)
     try:
         #s3.Bucket(S3_BUCKET).download_file(key, local_path)
-        s3.download_file(S3_BUCKET, key, key_name)
+        s3.download_file(S3_BUCKET, key, local_path)
         print('success download')
     except:
         print("The object does not exist.")
@@ -65,13 +65,13 @@ def download(key):
     #s3.download_file(S3_BUCKET, key, local_path)
     #local_path = '/autopost/static/' + key
     #local_path_test = '/static/' + key
-    #local_path_test = '/tmp/' + key
-    local_path_test = key_name
-    templateDir = os.path.dirname(__file__) + '/'
+    local_path_test = '/tmp/' + key
+    #local_path_test = key_name
+    templateDir = os.path.dirname(__file__)
     key_name_test = os.path.dirname(key_name)
     print('key_name_test')
     print(key_name_test)
-    #templateDir=templateDir[:-9]
+    templateDir=templateDir[:-9]
     print('templateDir')
     print(templateDir)
     last_test = templateDir+local_path_test
