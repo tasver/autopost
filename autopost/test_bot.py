@@ -40,6 +40,8 @@ def facebook_create_post(facebook_login,facebook_password,status,url_image=None)
     publish_post(driver,status,url_image=url_image)
     exit_driver(driver)
 
+
+
 def facebook_delete_post(facebook_login,facebook_password,n):
     driver = get_driver()
     facebook_login_fun(driver,facebook_login,facebook_password)
@@ -208,3 +210,4 @@ def delete_post(driver,n):
 #publish_post_public(url,status_message)
 #print(get_all_posts())
 
+#facebook_create_post(facebook_login,facebook_password,status_message,url_image='/home/tasver/python/Autopost/tmp/admin/1ba403b60d77c3033233.png')
