@@ -77,7 +77,7 @@ def add_task():
         else:
             test = None
         test_datetime = post.date_posted
-        take_day,take_time = test_datetime.split(' ')
+        take_day,take_time = str(test_datetime).split(' ')
         year,month,day = take_day.split('-')
         hour,minute = take_time.split(':')
         print(test_datetime)
