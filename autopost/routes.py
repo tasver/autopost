@@ -95,11 +95,10 @@ def add_task():
         #print(day)
         #print(hour)
         #print(minute)
-        sleep(2)
 
         #job2 = add.queue(3, 4, queue='high', timeout=60 * 2)
         #ob2 = queue.enqueue(facebook_create_post,facebook_login,facebook_password,test_publish,url_image=test)
-        facebook_create_post(facebook_login,facebook_password,test_publish,url_image=test)
+        facebook_create_post(facebook_login, facebook_password, test_publish, url_image=test)
           # Outputs False as job is not enqueued
 
         #registry = ScheduledJobRegistry(queue=queue)
