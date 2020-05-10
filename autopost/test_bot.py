@@ -12,6 +12,8 @@ from time import sleep
 import time
 import pyperclip
 import clipboard
+from tkinter import *
+import xerox
 
 from bs4 import BeautifulSoup
 #from autopost.settings import PATH
@@ -65,17 +67,42 @@ def publish_post(driver,status_message,url_image=None):
     WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
     print('still working before pyperclip')
     if url_image!= None:
-        pyperclip.copy(url_image)
         sleep(1.5)
-        print('still working after pyperclip')
         input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")
         time.sleep(2)
-        input.send_keys(status_message)
+        input.send_keys(url_image)
         time.sleep(3)
+        xerox.copy(url_image)
+        #Thing_you_want_to_copy|xclip -selection c
         elem = driver.switch_to_active_element()
+        #elem.send_keys(Keys.CONTROL + "a")
+        #time.sleep(3)
+        #actions = ActionChains(elem)
+        #actions.key_down(Keys.CONTROL)
+        #actions.send_keys("c")
+        #actions.key_up(Keys.CONTROL)
+
+        """
+        #new_link = elem.send_keys(Keys.CONTROL + "c")
+        #rint(new_link)
+        time.sleep(2)
+        url_image_len1 = len(url_image)
+        while url_image_len1>-1:
+            try:
+                elem.send_keys(Keys.BACKSPACE)
+                print('delete')
+                url_image_len1 = url_image_len1-1
+            except:
+                print('Somethi wrong1')
+        time.sleep(3)
+        """
+        elem.send_keys(status_message)
+        time.sleep(3)
+
         elem.send_keys(Keys.ENTER)
         elem.send_keys(Keys.ENTER)
         time.sleep(1.5)
+        #elem.send_keys(xerox.paste())
         elem.send_keys(Keys.CONTROL + "v")
         time.sleep(5)
         url_image_len = len(url_image)
@@ -85,7 +112,7 @@ def publish_post(driver,status_message,url_image=None):
                 print('delete')
                 url_image_len = url_image_len-1
             except:
-                print('Somethi wrong')
+                print('Somethi wrong2')
         time.sleep(3)
         time.sleep(3)
         time.sleep(4)
