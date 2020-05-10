@@ -31,7 +31,7 @@ facebook_login_button = './/*[@id="loginbutton"]'
 url = 'https://www.facebook.com/Test_dyploma-autopost-105020864533772/?modal=admin_todo_tour'
 status_message = 'HI, it is test8.19df'
 facebook_login = '380669288859'
-facebook_password = 'Kamaro123'
+facebook_password = 'Kamaro1231'
 
 #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', chrome_options=chrome_options)
 
@@ -199,8 +199,16 @@ def delete_post(driver,n):
 def facebook_create_post(facebook_login,facebook_password,status,url_image=None):
     try:
         driver = get_driver()
-        facebook_login_fun(driver,facebook_login,facebook_password)
-        publish_post(driver,status,url_image=url_image)
+        try:
+            facebook_login_fun(driver,facebook_login,facebook_password)
+            print('success login')
+        except:
+            print('login failed')
+        try:
+            publish_post(driver,status,url_image=url_image)
+            print('success publish')
+        except:
+            print('publish failed')
         exit_driver(driver)
     except:
         print("something went wrong")
