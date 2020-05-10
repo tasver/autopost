@@ -63,7 +63,7 @@ def publish_post(driver,status_message,url_image=None):
     time.sleep(2)
     time.sleep(1.5)
     WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
-
+    print('still working before pyperclip')
     if url_image!= None:
         pyperclip.copy(url_image)
         sleep(1.5)
