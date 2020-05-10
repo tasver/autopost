@@ -10,9 +10,9 @@ from autopost import driver
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 import time
-import pyperclip
-import clipboard
-from tkinter import *
+#import pyperclip
+#import clipboard
+#from tkinter import *
 import xerox
 
 from bs4 import BeautifulSoup
