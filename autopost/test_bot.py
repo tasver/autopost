@@ -67,6 +67,7 @@ def publish_post(driver,status_message,url_image=None):
     if url_image!= None:
         pyperclip.copy(url_image)
         sleep(1.5)
+        print('still working after pyperclip')
         input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")
         time.sleep(2)
         input.send_keys(status_message)

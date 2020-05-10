@@ -1,1 +1,6 @@
 xclip
+musl
+libxmu
+libxcb
+libbsd
+libx11
