@@ -73,6 +73,8 @@ def publish_post(driver,status_message,url_image=None):
         #input.send_keys(url_image)
         time.sleep(3)
         xerox.copy(url_image)
+        input.send_keys(status_message)
+        time.sleep(3)
         #Thing_you_want_to_copy|xclip -selection c
         elem = driver.switch_to_active_element()
         #elem.send_keys(Keys.CONTROL + "a")
@@ -96,8 +98,7 @@ def publish_post(driver,status_message,url_image=None):
                 print('Somethi wrong1')
         time.sleep(3)
         """
-        elem.send_keys(status_message)
-        time.sleep(3)
+
 
         elem.send_keys(Keys.ENTER)
         elem.send_keys(Keys.ENTER)
