@@ -4,4 +4,4 @@ libxmu
 libxcb
 libbsd
 libx11
-libxt.so6
+libxt.so.6
