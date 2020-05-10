@@ -70,7 +70,7 @@ def publish_post(driver,status_message,url_image=None):
         sleep(1.5)
         input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")
         time.sleep(2)
-        input.send_keys(url_image)
+        #input.send_keys(url_image)
         time.sleep(3)
         xerox.copy(url_image)
         #Thing_you_want_to_copy|xclip -selection c
