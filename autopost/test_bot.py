@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 import time
 import pyperclip
+import clipboard
 
 from bs4 import BeautifulSoup
 #from autopost.settings import PATH

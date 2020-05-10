@@ -9,6 +9,7 @@ certifi==2019.9.11
 cffi==1.13.2
 chardet==3.0.4
 Click==7.0
+clipboard==0.0.4
 colorama==0.4.3
 configparser==5.0.0
 crayons==0.3.0
@@ -35,6 +36,7 @@ Pillow==6.2.1
 psycopg2-binary==2.8.4
 pyasn1==0.4.8
 pycparser==2.19
+pyperclip==1.8.0
 python-dateutil==2.8.1
 python-dotenv==0.10.3
 python-editor==1.0.4
@@ -53,3 +55,5 @@ urllib3==1.25.7
 webdriver-manager==2.4.0
 Werkzeug==0.16.0
 WTForms==2.2.1
+
+
