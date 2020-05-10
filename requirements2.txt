@@ -57,3 +57,4 @@ urllib3==1.25.7
 webdriver-manager==2.4.0
 Werkzeug==0.16.0
 WTForms==2.2.1
+xerox==0.4.1
