@@ -1,9 +1,1 @@
 xclip
-repo:deb: http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/
-https://github.com/astrand/xclipxclip
-http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/xclip_0.12+svn84-4_amd64.deb
-http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/xclip_0.12+svn84-4_i386.deb
-http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/xclip_0.13-1_i386.deb
-http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/xclip_0.13-1_amd64.deb
-http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/xclip_0.12-1_i386.deb
-http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/xclip_0.12-1_amd64.deb
