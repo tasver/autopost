@@ -1,1 +1,14 @@
 xclip
+musl
+libxmu
+libxcb
+libbsd
+libx11
+libxt6
+libsm6
+libxext6
+libxrender-dev
+libice6
+libxrender1
+libfontconfig1
+libcups2
