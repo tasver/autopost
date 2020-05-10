@@ -5,10 +5,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.file_detector import *
 from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
 from autopost import driver
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 import time
+import pyperclip
+
 from bs4 import BeautifulSoup
 #from autopost.settings import PATH
 import os
@@ -25,37 +28,16 @@ facebook_password_field = './/*[@id="pass"]'
 facebook_login_button = './/*[@id="loginbutton"]'
 
 url = 'https://www.facebook.com/Test_dyploma-autopost-105020864533772/?modal=admin_todo_tour'
-status_message = 'HI, it is test1.58'
+status_message = 'HI, it is test8.19df'
 facebook_login = '380669288859'
 facebook_password = 'Kamaro123'
 
 #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', chrome_options=chrome_options)
 
 def get_driver():
-    #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', chrome_options=chrome_options)
+    #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', options=chrome_options)
     get_driv=driver
     return get_driv
-
-def facebook_create_post(facebook_login,facebook_password,status,url_image=None):
-    driver = get_driver()
-    facebook_login_fun(driver,facebook_login,facebook_password)
-    publish_post(driver,status,url_image=url_image)
-    exit_driver(driver)
-
-
-
-def facebook_delete_post(facebook_login,facebook_password,n):
-    driver = get_driver()
-    facebook_login_fun(driver,facebook_login,facebook_password)
-    delete_post(driver,n)
-    exit_driver(driver)
-
-def facebook_create_post_to_public(facebook_login,facebook_password,url,status):
-    driver = get_driver()
-    facebook_login_fun(driver,facebook_login,facebook_password)
-    publish_post_public(driver,url,status)
-    exit_driver(driver)
-
 
 def facebook_login_fun(driver,login,password):
     status = False
@@ -78,29 +60,36 @@ def exit_driver(driver):
 
 def publish_post(driver,status_message,url_image=None):
     time.sleep(2)
-    #test_url_image = download(url_image)
-    #time.sleep(2)
+    time.sleep(1.5)
     WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
-    url_image_test = "/home/tasver/Pictures/test.png"
 
-    #file_input.send_keys("/home/tasver/Pictures/test.png")
-    # Generally it's better to wrap the file path in one of the methods
-    # in os.path to return the actual path to support cross OS testing.
-    # file_input.send_keys(os.path.abspath("path/to/profilepic.gif"))
-
-    driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(1)
-    #s3_url = 's3://autopost-dyploma/admin/55b455a0e864370d76da.png'
-    if url_image!=None:
-        file_test = driver.find_element_by_class_name("fbReactComposerAttachmentSelector_MEDIA")
-    #driver.file_detector = LocalFileDetector()
-        time.sleep(1)
-    #file_test.click()
-        test = driver.find_element_by_xpath("//input[@type='file']")
-        #print(test)
+    if url_image!= None:
+        pyperclip.copy(url_image)
+        sleep(1.5)
+        input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")
+        time.sleep(2)
+        input.send_keys(status_message)
         time.sleep(3)
-        test.send_keys(url_image)
-        time.sleep(10)
+        elem = driver.switch_to_active_element()
+        elem.send_keys(Keys.ENTER)
+        elem.send_keys(Keys.ENTER)
+        time.sleep(1.5)
+        elem.send_keys(Keys.CONTROL + "v")
+        time.sleep(5)
+        url_image_len = len(url_image)
+        while url_image_len>-1:
+            try:
+                elem.send_keys(Keys.BACKSPACE)
+                print('delete')
+                url_image_len = url_image_len-1
+            except:
+                print('Somethi wrong')
+        time.sleep(3)
+        time.sleep(3)
+        time.sleep(4)
+    else:
+        ext_to_put_to_clipboard = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
+    time.sleep(2)
     buttons = driver.find_elements_by_tag_name('button')
     time.sleep(1)
     for button in buttons:
@@ -114,6 +103,7 @@ def publish_post(driver,status_message,url_image=None):
             button.click()
             break
     time.sleep(1)
+    return True
 
 def publish_post_public(driver,url,status_message):
 
@@ -205,13 +195,35 @@ def delete_post(driver,n):
     time.sleep(3)
 
 
+def facebook_create_post(facebook_login,facebook_password,status,url_image=None):
+    try:
+        driver = get_driver()
+        facebook_login_fun(driver,facebook_login,facebook_password)
+        publish_post(driver,status,url_image=url_image)
+        exit_driver(driver)
+    except:
+        print("something went wrong")
+        return False
+    return True
 
+def facebook_delete_post(facebook_login,facebook_password,n):
+    driver = get_driver()
+    facebook_login_fun(driver,facebook_login,facebook_password)
+    delete_post(driver,n)
+    exit_driver(driver)
 
+def facebook_create_post_to_public(facebook_login,facebook_password,url,status):
+    driver = get_driver()
+    facebook_login_fun(driver,facebook_login,facebook_password)
+    publish_post_public(driver,url,status)
+    exit_driver(driver)
 
+#facebook_create_post(facebook_login,facebook_password,"test333")
 #go_to_profile()
 #print(get_post(0))
 #delete_post(0)
 #publish_post_public(url,status_message)
 #print(get_all_posts())
 
-#facebook_create_post(facebook_login,facebook_password,status_message,url_image='/home/tasver/python/Autopost/tmp/admin/1ba403b60d77c3033233.png')
+#test_ds = facebook_create_post(facebook_login,facebook_password,status_message,url_image='/home/tasver/python/Autopost/tmp/admin/1ba403b60d77c3033233.png')
+#print(test_ds)
