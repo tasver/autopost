@@ -1,3 +1,4 @@
 web: gunicorn wsgi:app
 worker: python worker.py
 xclip
+deb: http://cz.archive.ubuntu.com/ubuntu/pool/universe/x/xclip/
