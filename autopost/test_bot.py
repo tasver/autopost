@@ -198,23 +198,23 @@ def delete_post(driver,n):
 
 
 def facebook_create_post(facebook_login,facebook_password,status,url_image=None):
-    try:
-        driver = get_driver()
-        try:
-            facebook_login_fun(driver,facebook_login,facebook_password)
-            print('success login')
-        except:
-            print('login failed')
-        try:
-            publish_post(driver,status,url_image=url_image)
-            print('success publish')
-        except:
-            print('publish failed')
-        exit_driver(driver)
-    except:
-        print("something went wrong")
-        return False
-    return True
+    #try:
+    driver = get_driver()
+    #try:
+    facebook_login_fun(driver,facebook_login,facebook_password)
+    print('success login')
+# except:
+    print('login failed')
+#try:
+    publish_post(driver,status,url_image=url_image)
+    print('success publish')
+#except:
+    print('publish failed')
+    exit_driver(driver)
+#except:
+    print("something went wrong")
+        #return False
+    #return True
 
 def facebook_delete_post(facebook_login,facebook_password,n):
     driver = get_driver()
