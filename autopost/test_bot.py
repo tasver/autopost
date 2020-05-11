@@ -13,7 +13,7 @@ import time
 #import pyperclip
 #import clipboard
 #from tkinter import *
-import xerox
+#import xerox
 
 from bs4 import BeautifulSoup
 #from autopost.settings import PATH
@@ -64,34 +64,30 @@ def exit_driver(driver):
 def publish_post(driver,status_message,url_image=None):
     time.sleep(2)
     time.sleep(1.5)
-    WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
+    test_frame = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
     print('still working before pyperclip')
     if url_image!= None:
         sleep(1.5)
-        input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")
+        input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(url_image)
         time.sleep(2)
-        #input.send_keys(url_image)
-        time.sleep(3)
-        xerox.copy(url_image,xsel=True)
-        #print(xerox.paste())
-        #input.send_keys(Keys.CONTROL + "v")
-        input.send_keys(url_image)
-        time.sleep(5)
-
         elem = driver.switch_to_active_element()
-        url_image_len = len(url_image)
-        while url_image_len>-1:
+        elem.send_keys(Keys.ENTER)
+        elem.send_keys(Keys.ENTER)
+        url_image_len2 = len(url_image)
+        while url_image_len2>-10:
             try:
                 elem.send_keys(Keys.BACKSPACE)
                 print('delete')
-                url_image_len = url_image_len-1
+                url_image_len2 = url_image_len2-1
             except:
                 print('Somethi wrong2')
-        time.sleep(7)
-        print('xerox copy(mb)')
+        time.sleep(3)
+
+        #driver.find_element_by_xpath("//div[@aria-label='Відхилити']").click()
         elem.send_keys(status_message)
         print('send message')
         time.sleep(3)
+
         #Thing_you_want_to_copy|xclip -selection c
         #elem.send_keys(Keys.CONTROL + "a")
         #time.sleep(3)
@@ -115,10 +111,6 @@ def publish_post(driver,status_message,url_image=None):
         time.sleep(3)
         """
 
-
-        elem.send_keys(Keys.ENTER)
-        elem.send_keys(Keys.ENTER)
-        print('pressed enter2')
         time.sleep(3)
         #elem.send_keys(xerox.paste())
 
