@@ -108,7 +108,7 @@ def add_task():
         print(seconds)
 
         #job2 = add.queue(3, 4, queue='high', timeout=60 * 2)
-        job = queue.enqueue_at(datetime(year, month, day, hour, minute), facebook_create_post,facebook_login,facebook_password,test_publish,test)
+        job = queue.enqueue_at(datetime(int(year), int(month), int(day), int(hour), int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
         registry = ScheduledJobRegistry(queue=queue)
         print(job in registry)
         #ob2 = queue.enqueue(facebook_create_post,facebook_login,facebook_password,test_publish,test)
