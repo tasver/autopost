@@ -73,7 +73,8 @@ def publish_post(driver,status_message,url_image=None):
         #input.send_keys(url_image)
         time.sleep(3)
         xerox.copy(url_image)
-        input.send_keys(Keys.CONTROL + "v")
+        #input.send_keys(Keys.CONTROL + "v")
+        input.send_keys(url_image)
         time.sleep(5)
 
         elem = driver.switch_to_active_element()
