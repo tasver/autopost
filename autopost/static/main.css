@@ -133,23 +133,20 @@ td:before {
 }
 }
 .td_date {
-    width: 14%;
+    width: 15%;
 }
 .td_title {
-    width: 16%;
+    width: 17%;
 }
 .td_content {
-    width: 30%;
+    width: 35%;
 }
 .td_tags {
-    width: 10%;
-}
-.td_image {
     width: 10%;
 }
 .td_alr {
     width: 5;
 }
 .td_change {
-    width: 15%;
+    width: 18%;
 }

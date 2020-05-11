@@ -64,14 +64,14 @@
             <div class="form-group">
                 {{ form.already_posted.label(class="form-control-label") }}
                 {% if form.already_posted.errors %}
-                    {{ form.already_posted(class="form-control form-control-lg is-invalid") }}
+                    {{ form.already_posted(class="form-control form-control-sm is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.already_posted.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.already_posted(class="form-control form-control-lg") }}
+                    {{ form.already_posted(class="form-control form-control-sm") }}
                 {% endif %}
             </div>
 
