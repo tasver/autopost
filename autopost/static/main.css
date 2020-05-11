@@ -132,3 +132,24 @@ td:before {
     white-space: nowrap;
 }
 }
+.td_date {
+    width: 14%;
+}
+.td_title {
+    width: 16%;
+}
+.td_content {
+    width: 30%;
+}
+.td_tags {
+    width: 10%;
+}
+.td_image {
+    width: 10%;
+}
+.td_alr {
+    width: 5;
+}
+.td_change {
+    width: 15%;
+}
