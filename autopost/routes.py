@@ -23,16 +23,27 @@ from time import sleep
 import time
 from autopost.test_bot import *
 
-from autopost import driver
+#from autopost import driver
 from worker import *
 from utils import *
-
-
 
 @app.route("/")
 @app.route("/home")
 def home():
-    return render_template('home.html')
+    #user = User.query.all()
+    username = current_user.username
+    user = User.query.filter_by(username=username).first_or_404()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.filter_by(user_id=user.id).order_by(Post.id.desc()).paginate(page, 10, False)
+    return render_template('home.html', user=user, posts=posts)
+    #user = User.query.filter_by(email=form.email.data).first()
+    #user = User.query.filter_by(username=username).first()
+    #page = request.args.get('page', 1,type=int)
+    #posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page = 10)
+    #return render_template('home.html',posts=posts, user = user)
+
+
+
 
 @app.route("/about")
 def about():
@@ -58,17 +69,16 @@ def add_task():
             my_bucket = get_bucket()
             my_bucket.Object(name_file).put(ACL='public-read', Body=file,ContentType ='image/png')
 
-            #file_path = "s3://autopost-dyploma/" + name_file
-            file_path = name_file
-            file_path_2 = "https://s3.console.aws.amazon.com/s3/object/autopost-dyploma/" + name_file
+            #file_path = name_file
+            #file_path_2 = "https://s3.console.aws.amazon.com/s3/object/autopost-dyploma/" + name_file
             file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
 
         else:
-            file_path = "no file"
+            file_path_3 = "no file"
 
         post = Post(title = form.title.data, content = form.content.data, \
                     author= current_user, date_posted = form.date_posted.data, \
-                    image_file = file_path, tags = form.tags.data, \
+                    image_file = file_path_3, tags = form.tags.data, \
                     already_posted = form.already_posted.data,\
                     )
         db.session.add(post)
@@ -78,17 +88,10 @@ def add_task():
         test = None
         if post.image_file!=None and post.image_file!="no file":
             key = post.image_file
-            #test = download(key)
-            #test2 = download('test/600fffdef71457efeecc.png')
-            #testt5 = 's3://dyploma-autopost2/test/26e1b96cbf41076b19ac.png'
             test = file_path_3
-            #test3=download('s3://dyploma-autopost2/test/098bd2beadf444c5519e.png')
-            #test = key
-            #test = queue.enqueue(download, key)
             print(test)
         else:
             test = None
-
 
         test_datetime = post.date_posted
         print(test_datetime)
@@ -107,17 +110,9 @@ def add_task():
         print(minute)
         print(seconds)
 
-        #job2 = add.queue(3, 4, queue='high', timeout=60 * 2)
         job = queue.enqueue_at(datetime(int(year), int(month), int(day), int(hour), int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
         registry = ScheduledJobRegistry(queue=queue)
         print(job in registry)
-        #ob2 = queue.enqueue(facebook_create_post,facebook_login,facebook_password,test_publish,test)
-        #facebook_create_post(facebook_login, facebook_password, test_publish, url_image=test)
-          # Outputs False as job is not enqueued
-
-        #registry = ScheduledJobRegistry(queue=queue)
-        #print(test_job in registry)
-        #facebook_delete_post(facebook_login,facebook_password,0)
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
