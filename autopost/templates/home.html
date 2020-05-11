@@ -34,12 +34,12 @@
                 <tbody>
                     {% for post in posts.items %}
                         <tr>
-                            <th scope="row"><small>{{ post.date_posted }}</small></th>
-                            <td>{{ post.title }}</td>
-                            <td>{{ post.content }}</td>
-                            <td>{{ post.tags }}</td>
-                            <td>{{ post.already_posted }}</td>
-                            <td class="test_inl">
+                            <th class="td_date" scope="row"><small>{{ post.date_posted }}</small></th>
+                            <td class="td_title">{{ post.title }}</td>
+                            <td class="td_content">{{ post.content }}</td>
+                            <td class="td_tags">{{ post.tags }}</td>
+                            <td class="td_alr">{{ post.already_posted }}</td>
+                            <td class="test_inl td_change">
                                 <a href="#" role="button" class="btn btn-outline-danger btn-sm ">Delete</a>
                                 <a href="#" role="button" class="btn btn-outline-info btn-sm ">Edit</a>
                             </td>
