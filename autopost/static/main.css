@@ -109,11 +109,7 @@ table, thead, tbody, th, td, tr {
 }
 
 /* Hide table headers (but not display: none;, for accessibility) */
-thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-}
+
 
 tr { border: 1px solid #ccc; }
 
