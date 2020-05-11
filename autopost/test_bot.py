@@ -126,12 +126,15 @@ def publish_post(driver,status_message,url_image=None):
     for button in buttons:
         if button.text=='Опублікувати':
             button.click()
+            print('button pressed')
             break
         elif button.text=='Post':
             button.click()
+            print('button pressed')
             break
         elif button.text=='Отправить':
             button.click()
+            print('button pressed')
             break
     time.sleep(2)
     return True
