@@ -85,9 +85,9 @@ def publish_post(driver,status_message,url_image=None):
                 url_image_len = url_image_len-1
             except:
                 print('Somethi wrong2')
-        time.sleep(4)
+        time.sleep(7)
         print('xerox copy(mb)')
-        input.send_keys(status_message)
+        elem.send_keys(status_message)
         print('send message')
         time.sleep(3)
         #Thing_you_want_to_copy|xclip -selection c
