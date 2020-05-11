@@ -30,12 +30,15 @@ from utils import *
 @app.route("/")
 @app.route("/home")
 def home():
+    if current_user.is_authenticated:
     #user = User.query.all()
-    username = current_user.username
-    user = User.query.filter_by(username=username).first_or_404()
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.filter_by(user_id=user.id).order_by(Post.id.desc()).paginate(page, 10, False)
-    return render_template('home.html', user=user, posts=posts)
+        username = current_user.username
+        user = User.query.filter_by(username=username).first_or_404()
+        page = request.args.get('page', 1, type=int)
+        posts = Post.query.filter_by(user_id=user.id).order_by(Post.id.desc()).paginate(page, 10, False)
+        return render_template('home.html', user=user, posts=posts)
+    else:
+        return render_template('home_dev.html')
     #user = User.query.filter_by(email=form.email.data).first()
     #user = User.query.filter_by(username=username).first()
     #page = request.args.get('page', 1,type=int)
