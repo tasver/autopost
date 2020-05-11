@@ -90,21 +90,28 @@ def add_task():
             test = None
 
 
-        #test_datetime = post.date_posted
-        #take_day,take_time = str(test_datetime).split(' ')
-        #year,month,day = take_day.split('-')
-        #hour,minute = take_time.split(':')
-        #print(test_datetime)
-        #print(take_day)
-        #print(take_time)
-        #print(year)
-        #print(month)
-        #print(day)
-        #print(hour)
-        #print(minute)
+        test_datetime = post.date_posted
+        print(test_datetime)
+
+        take_day,take_time = str(test_datetime).split(' ')
+        print(take_day)
+        print(take_time)
+
+        year,month,day = take_day.split('-')
+        print(year)
+        print(month)
+        print(day)
+
+        hour,minute,seconds = take_time.split(':')
+        print(hour)
+        print(minute)
+        print(seconds)
 
         #job2 = add.queue(3, 4, queue='high', timeout=60 * 2)
-        ob2 = queue.enqueue(facebook_create_post,facebook_login,facebook_password,test_publish,test)
+        job = queue.enqueue_at(datetime(year, month, day, hour, minute), facebook_create_post,facebook_login,facebook_password,test_publish,test)
+        registry = ScheduledJobRegistry(queue=queue)
+        print(job in registry)
+        #ob2 = queue.enqueue(facebook_create_post,facebook_login,facebook_password,test_publish,test)
         #facebook_create_post(facebook_login, facebook_password, test_publish, url_image=test)
           # Outputs False as job is not enqueued
 
