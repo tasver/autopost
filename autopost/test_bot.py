@@ -73,12 +73,24 @@ def publish_post(driver,status_message,url_image=None):
         #input.send_keys(url_image)
         time.sleep(3)
         xerox.copy(url_image)
+        input.send_keys(Keys.CONTROL + "v")
+        time.sleep(5)
+
+        elem = driver.switch_to_active_element()
+        url_image_len = len(url_image)
+        while url_image_len>-1:
+            try:
+                elem.send_keys(Keys.BACKSPACE)
+                print('delete')
+                url_image_len = url_image_len-1
+            except:
+                print('Somethi wrong2')
+        time.sleep(4)
         print('xerox copy(mb)')
         input.send_keys(status_message)
         print('send message')
         time.sleep(3)
         #Thing_you_want_to_copy|xclip -selection c
-        elem = driver.switch_to_active_element()
         #elem.send_keys(Keys.CONTROL + "a")
         #time.sleep(3)
         #actions = ActionChains(elem)
@@ -107,17 +119,7 @@ def publish_post(driver,status_message,url_image=None):
         print('pressed enter2')
         time.sleep(3)
         #elem.send_keys(xerox.paste())
-        elem.send_keys(Keys.CONTROL + "v")
-        time.sleep(5)
-        url_image_len = len(url_image)
-        while url_image_len>-1:
-            try:
-                elem.send_keys(Keys.BACKSPACE)
-                print('delete')
-                url_image_len = url_image_len-1
-            except:
-                print('Somethi wrong2')
-        time.sleep(4)
+
     else:
         ext_to_put_to_clipboard = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
     time.sleep(3)
