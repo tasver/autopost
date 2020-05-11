@@ -1,4 +1,5 @@
 xclip
+xsel
 musl
 libxmu
 libxcb
