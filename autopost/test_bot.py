@@ -21,10 +21,10 @@ import os
 from autopost.resources import *
 
 
-chrome_options = webdriver.ChromeOptions()
-chrome_options.add_argument("--no-sandbox")
-prefs = {"profile.default_content_setting_values.notifications" : 2}
-chrome_options.add_experimental_option("prefs",prefs)
+#chrome_options = webdriver.ChromeOptions()
+#chrome_options.add_argument("--no-sandbox")
+#prefs = {"profile.default_content_setting_values.notifications" : 2}
+#chrome_options.add_experimental_option("prefs",prefs)
 
 facebook_email = './/*[@id="email"]'
 facebook_password_field = './/*[@id="pass"]'

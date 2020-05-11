@@ -1,4 +1,4 @@
-@import "bootstrap";
+
 
 body {
   background: #fafafa;
@@ -99,25 +99,6 @@ a:link { color:#444444;  }
 a:visited { color:#444444;  }
 a:active { color:#999999;  }
 
-
-.td_date {
-    width: 15%;
-}
-.td_title {
-    width: 17%;
-}
-.td_content {
-    width: 35%;
-}
-.td_tags {
-    width: 10%;
-}
-.td_alr {
-    width: 5;
-}
-.td_change {
-    width: 18%;
-}
 
 
 

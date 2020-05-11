@@ -1,45 +1,29 @@
-<!DOCTYPE html>
-<html>
-
-
 {% extends "layout.html" %}
 {% block content %}
-    <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-
-
-        <title> Autopost Service </title>
-    </head>
 
 
         <article class="media content-section article-metadata">
-            <div class=".table-responsive">
+
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="td_date" scope="col"> Date posted </th>
-                        <th class="td_title" scope="col"> Title </th>
-                        <th class="td_content" scope="col"> Content </th>
-                        <th class="td_tags" scope="col"> Tags </th>
-                        <th class="td_alr" scope="col"> Alr posted </th>
-                        <th class="td_change" scope="col"> Change </th>
+                        <th style="width: 15% " scope="col"> Date posted </th>
+                        <th style="width: 20% " scope="col"> Title </th>
+                        <th style="width: 35% " scope="col"> Content </th>
+                        <th style="width: 10% " scope="col"> Tags </th>
+                        <th style="width: 6% " scope="col"> Alr posted </th>
+                        <th style="width: 14% " scope="col"> Change </th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for post in posts.items %}
                         <tr>
-                            <th class="td_date" scope="row"><small>{{ post.date_posted }}</small></th>
-                            <td class="td_title">{{ post.title }}</td>
-                            <td class="td_content">{{ post.content }}</td>
-                            <td class="td_tags">{{ post.tags }}</td>
-                            <td class="td_alr">{{ post.already_posted }}</td>
-                            <td class="test_inl td_change">
+                            <th  scope="row"><small>{{ post.date_posted }}</small></th>
+                            <td >{{ post.title }}</td>
+                            <td >{{ post.content }}</td>
+                            <td >{{ post.tags }}</td>
+                            <td >{{ post.already_posted }}</td>
+                            <td class="test_inl ">
                                 <a href="#" role="button" class="btn btn-outline-danger btn-sm ">Delete</a>
                                 <a href="#" role="button" class="btn btn-outline-info btn-sm ">Edit</a>
                             </td>
@@ -48,7 +32,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            </div>
+
         </article>
 
     {% for page_num in posts.iter_pages(left_edge = 1, right_edge = 1, left_current=1, right_current=2) %}
@@ -63,4 +47,3 @@
     {% endfor %}
 
 {% endblock content %}
-</html>
