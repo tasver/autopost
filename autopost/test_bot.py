@@ -73,7 +73,9 @@ def publish_post(driver,status_message,url_image=None):
         #input.send_keys(url_image)
         time.sleep(3)
         xerox.copy(url_image)
+        print('xerox copy(mb)')
         input.send_keys(status_message)
+        print('send message')
         time.sleep(3)
         #Thing_you_want_to_copy|xclip -selection c
         elem = driver.switch_to_active_element()
@@ -102,7 +104,8 @@ def publish_post(driver,status_message,url_image=None):
 
         elem.send_keys(Keys.ENTER)
         elem.send_keys(Keys.ENTER)
-        time.sleep(1.5)
+        print('pressed enter2')
+        time.sleep(3)
         #elem.send_keys(xerox.paste())
         elem.send_keys(Keys.CONTROL + "v")
         time.sleep(5)
@@ -114,14 +117,12 @@ def publish_post(driver,status_message,url_image=None):
                 url_image_len = url_image_len-1
             except:
                 print('Somethi wrong2')
-        time.sleep(3)
-        time.sleep(3)
         time.sleep(4)
     else:
         ext_to_put_to_clipboard = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(2)
+    time.sleep(3)
     buttons = driver.find_elements_by_tag_name('button')
-    time.sleep(1)
+    time.sleep(3)
     for button in buttons:
         if button.text=='Опублікувати':
             button.click()
@@ -132,7 +133,7 @@ def publish_post(driver,status_message,url_image=None):
         elif button.text=='Отправить':
             button.click()
             break
-    time.sleep(1)
+    time.sleep(2)
     return True
 
 def publish_post_public(driver,url,status_message):
