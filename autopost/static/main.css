@@ -99,9 +99,31 @@ a:link { color:#444444;  }
 a:visited { color:#444444;  }
 a:active { color:#999999;  }
 
+
+.td_date {
+    width: 15%;
+}
+.td_title {
+    width: 17%;
+}
+.td_content {
+    width: 35%;
+}
+.td_tags {
+    width: 10%;
+}
+.td_alr {
+    width: 5;
+}
+.td_change {
+    width: 18%;
+}
+
+
+
+
 @media
-only screen and (max-width: 760px),
-(min-device-width: 760px) and (max-device-width: 992px)  {
+only screen and (max-width: 760px), (min-device-width: 760px) and (max-device-width: 992px)  {
 
 /* Force table to not be like tables anymore */
 table, thead, tbody, th, td, tr {
@@ -131,22 +153,4 @@ td:before {
     padding-right: 10px;
     white-space: nowrap;
 }
-}
-.td_date {
-    width: 15%;
-}
-.td_title {
-    width: 17%;
-}
-.td_content {
-    width: 35%;
-}
-.td_tags {
-    width: 10%;
-}
-.td_alr {
-    width: 5;
-}
-.td_change {
-    width: 18%;
 }
