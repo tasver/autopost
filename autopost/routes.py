@@ -2,7 +2,7 @@ from flask import json,jsonify, render_template,url_for, flash, redirect, reques
 from autopost import app, db, bcrypt
 from PIL import Image
 import json, facebook
-from autopost.forms import AddProject,AddSocial, AdminUserCreateForm, RegistrationForm, LoginForm, UpdateAccountForm, AddTask
+from autopost.forms import *
 from autopost.models import User, Post, Project, Social
 from flask_login import login_user, current_user, logout_user,login_required
 import os
@@ -31,21 +31,13 @@ from utils import *
 @app.route("/home")
 def home():
     if current_user.is_authenticated:
-    #user = User.query.all()
         username = current_user.username
         user = User.query.filter_by(username=username).first_or_404()
         page = request.args.get('page', 1, type=int)
-        posts = Post.query.filter_by(user_id=user.id).order_by(Post.id.desc()).paginate(page, 10, False)
+        posts = Post.query.filter_by(user_id=user.id).order_by(Post.date_posted.desc()).paginate(page, 10, False)
         return render_template('home.html', user=user, posts=posts)
     else:
         return render_template('home_dev.html')
-    #user = User.query.filter_by(email=form.email.data).first()
-    #user = User.query.filter_by(username=username).first()
-    #page = request.args.get('page', 1,type=int)
-    #posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page = 10)
-    #return render_template('home.html',posts=posts, user = user)
-
-
 
 
 @app.route("/about")
@@ -53,12 +45,11 @@ def about():
     return render_template('about.html', title='About')
 
 
-
-
 @app.route("/add_task", methods=['GET', 'POST'])
 @login_required
 def add_task():
     form = AddTask()
+
     if form.validate_on_submit():
         if form.image_file.data:
             file = request.files['image_file']
@@ -72,22 +63,25 @@ def add_task():
             my_bucket = get_bucket()
             my_bucket.Object(name_file).put(ACL='public-read', Body=file,ContentType ='image/png')
 
-            #file_path = name_file
-            #file_path_2 = "https://s3.console.aws.amazon.com/s3/object/autopost-dyploma/" + name_file
             file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
 
         else:
             file_path_3 = "no file"
+        date_test = str(form.date_posted.data)
+        time_test = str(form.time_posted.data)
+        time_te = time_test[11:]
+        year,month,day = date_test.split('-')
+        hour_ser,minute,seconds = time_te.split(':')
+        date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
 
         post = Post(title = form.title.data, content = form.content.data, \
-                    author= current_user, date_posted = form.date_posted.data, \
+                    author= current_user, date_posted = date_posted2, \
                     image_file = file_path_3, tags = form.tags.data, \
-                    already_posted = form.already_posted.data,\
+                    already_posted=False
                     )
         db.session.add(post)
         db.session.commit()
         test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
-        #test_publish = post.content
         test = None
         if post.image_file!=None and post.image_file!="no file":
             key = post.image_file
@@ -95,27 +89,19 @@ def add_task():
             print(test)
         else:
             test = None
-
         test_datetime = post.date_posted
-        print(test_datetime)
-
         take_day,take_time = str(test_datetime).split(' ')
-        print(take_day)
-        print(take_time)
+        year,month,day = date_test.split('-')
+        hour_ser,minute,seconds = take_time.split(':')
+        hour = int(hour_ser) - 3
+        if hour<0:
+            hour=24+hour
 
-        year,month,day = take_day.split('-')
-        print(year)
-        print(month)
-        print(day)
 
-        hour,minute,seconds = take_time.split(':')
-        print(hour)
-        print(minute)
-        print(seconds)
-
-        job = queue.enqueue_at(datetime(int(year), int(month), int(day), int(hour), int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
+        job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
         registry = ScheduledJobRegistry(queue=queue)
         print(job in registry)
+        print('Job id: %s' % job.id)
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
@@ -209,7 +195,7 @@ def account():
         form.email.data = current_user.email
     return render_template('account.html', title = 'Account', form = form)
 
-
+"""
 @app.route('/user/<username>')
 @login_required
 def user(username):
@@ -217,7 +203,7 @@ def user(username):
     page = request.args.get('page', 1, type=int)
     posts = Post.query.filter_by(user_id=user.id).paginate(page, 20, False)
     return render_template('user.html', user=user, posts=posts.items)
-
+"""
 def admin_login_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
@@ -226,6 +212,190 @@ def admin_login_required(func):
         return func(*args, **kwargs)
     return decorated_view
 
+
+
+
+@app.route("/task/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_task(post_id):
+    form = AddTask()
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+
+    if request.method == 'POST' and form.validate_on_submit():
+        if form.image_file.data:
+            file = request.files['image_file']
+            nameee = request.files['image_file'].filename
+            extensions = Path(nameee).suffixes
+            ext = "".join(extensions)
+            random_hex = str(secrets.token_hex(10))
+            usern = str(current_user.username)
+            name_file = usern + "/"+ random_hex + ext
+
+            my_bucket = get_bucket()
+            my_bucket.Object(name_file).put(ACL='public-read', Body=file,ContentType ='image/png')
+
+            file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
+
+        else:
+            file_path_3 = "no file"
+        date_test = str(form.date_posted.data)
+        time_test = str(form.time_posted.data)
+        time_te = time_test[11:]
+        year,month,day = date_test.split('-')
+        hour_ser,minute,seconds = time_te.split(':')
+        date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+        post.title = form.title.data
+        post.content = form.content.data
+        post.date_posted = date_posted2
+        post.image_file = file_path_3
+        post.tags = form.tags.data
+
+        db.session.commit()
+        flash('Your task hes been updated!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+        form.date_posted.data = post.date_posted
+        form.time_posted.data = post.date_posted
+        form.image_file.data = post.image_file
+        form.tags.data = post.tags
+        form.image_file_url.data = post.image_file
+    return render_template('update_task.html', title='Update Task' , form  = form, legend = 'Update Task',post = post)
+
+@app.route("/post/<int:post_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_task(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post hes been deleted!', 'success')
+    return redirect(url_for('home'))
+"""
+
+@app.route("/notes")
+def notes():
+    if current_user.is_authenticated:
+        username = current_user.username
+        user = User.query.filter_by(username=username).first_or_404()
+        page = request.args.get('page', 1, type=int)
+        posts = Post.query.filter_by(user_id=user.id).filter(Post.title.like('%(notesss)')).filter(Post.content.like('%(notesss)')).order_by(Post.id.desc()).paginate(page, 10, False)
+
+        return render_template('notes.html', user=user, posts=posts)
+    else:
+        return redirect(url_for('home'))
+
+
+@app.route("/add_note", methods=['GET', 'POST'])
+@login_required
+def add_note():
+    form = AddTask()
+
+    if form.validate_on_submit():
+        if form.image_file.data:
+            file = request.files['image_file']
+            nameee = request.files['image_file'].filename
+            extensions = Path(nameee).suffixes
+            ext = "".join(extensions)
+            random_hex = str(secrets.token_hex(10))
+            usern = str(current_user.username)
+            name_file = usern + "/"+ random_hex + ext
+
+            my_bucket = get_bucket()
+            my_bucket.Object(name_file).put(ACL='public-read', Body=file,ContentType ='image/png')
+
+            file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
+
+        else:
+            file_path_3 = "no file"
+        date_test = str(form.date_posted.data)
+        time_test = str(form.time_posted.data)
+        time_te = time_test[11:]
+        year,month,day = date_test.split('-')
+        hour_ser,minute,seconds = time_te.split(':')
+        date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+
+        post = Post(title = form.title.data + "(notesss)", content = form.content.data + "(notesss)", \
+                    author= current_user, date_posted = date_posted2, \
+                    image_file = file_path_3, tags = form.tags.data, \
+                    already_posted=False
+                    )
+        db.session.add(post)
+        db.session.commit()
+
+        flash('Your notes has been created!', 'success')
+        return redirect(url_for('notes'))
+    return render_template('add_notes.html', title='New Notes', form = form, legend = 'New notes')
+
+@app.route("/notes/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_notes(post_id):
+    form = NotesTask()
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+
+    if request.method == 'POST' and form.validate_on_submit():
+        if form.image_file.data:
+            file = request.files['image_file']
+            nameee = request.files['image_file'].filename
+            extensions = Path(nameee).suffixes
+            ext = "".join(extensions)
+            random_hex = str(secrets.token_hex(10))
+            usern = str(current_user.username)
+            name_file = usern + "/"+ random_hex + ext
+
+            my_bucket = get_bucket()
+            my_bucket.Object(name_file).put(ACL='public-read', Body=file,ContentType ='image/png')
+
+            file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
+            post.image_file = file_path_3
+        else:
+            file_path_3 = "no file"
+            post.image_file = file_path_3
+
+        if form.date_posted.data:
+            date_test = str(form.date_posted.data)
+            time_test = str(form.time_posted.data)
+            time_te = time_test[11:]
+            year,month,day = date_test.split('-')
+            hour_ser,minute,seconds = time_te.split(':')
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted = date_posted2
+        if form.title.data:
+            post.title = form.title.data
+        if form.content.data:
+            post.content = form.content.data
+        if form.tags.data:
+            post.tags = form.tags.data
+        db.session.commit()
+        flash('Your task hes been updated!', 'success')
+        return redirect(url_for('notes'))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+        form.date_posted.data = post.date_posted
+        form.time_posted.data = post.date_posted
+        form.image_file.data = post.image_file
+        form.tags.data = post.tags
+        form.image_file_url.data = post.image_file
+    return render_template('update_task.html', title='Update Notes' , form  = form, legend = 'Update Notes',post = post)
+
+@app.route("/notes/<int:post_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_notes(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your notes hes been deleted!', 'success')
+    return redirect(url_for('notes'))
+"""
 @app.route('/admin')
 @login_required
 @admin_login_required

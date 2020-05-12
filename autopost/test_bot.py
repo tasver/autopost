@@ -10,10 +10,6 @@ from autopost import driver
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 import time
-#import pyperclip
-#import clipboard
-#from tkinter import *
-#import xerox
 
 from bs4 import BeautifulSoup
 #from autopost.settings import PATH
@@ -38,7 +34,7 @@ facebook_password = 'Kamaro1231'
 #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', chrome_options=chrome_options)
 
 def get_driver():
-    #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', options=chrome_options)
+    driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', options=chrome_options)
     get_driv=driver
     return get_driv
 
@@ -87,33 +83,6 @@ def publish_post(driver,status_message,url_image=None):
         elem.send_keys(status_message)
         print('send message')
         time.sleep(3)
-
-        #Thing_you_want_to_copy|xclip -selection c
-        #elem.send_keys(Keys.CONTROL + "a")
-        #time.sleep(3)
-        #actions = ActionChains(elem)
-        #actions.key_down(Keys.CONTROL)
-        #actions.send_keys("c")
-        #actions.key_up(Keys.CONTROL)
-
-        """
-        #new_link = elem.send_keys(Keys.CONTROL + "c")
-        #rint(new_link)
-        time.sleep(2)
-        url_image_len1 = len(url_image)
-        while url_image_len1>-1:
-            try:
-                elem.send_keys(Keys.BACKSPACE)
-                print('delete')
-                url_image_len1 = url_image_len1-1
-            except:
-                print('Somethi wrong1')
-        time.sleep(3)
-        """
-
-        time.sleep(3)
-        #elem.send_keys(xerox.paste())
-
     else:
         ext_to_put_to_clipboard = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
     time.sleep(3)
@@ -133,7 +102,10 @@ def publish_post(driver,status_message,url_image=None):
             print('button pressed')
             break
     time.sleep(2)
-    return True
+    go_to_profile(driver)
+    url = get_post(driver,0)
+
+    return url
 
 def publish_post_public(driver,url,status_message):
 
@@ -226,23 +198,26 @@ def delete_post(driver,n):
 
 
 def facebook_create_post(facebook_login,facebook_password,status,url_image=None):
-    #try:
-    driver = get_driver()
-    #try:
-    facebook_login_fun(driver,facebook_login,facebook_password)
-    print('success login')
-# except:
-    print('login failed')
-#try:
-    publish_post(driver,status,url_image=url_image)
-    print('success publish')
-#except:
-    print('publish failed')
-    exit_driver(driver)
-#except:
-    print("something went wrong")
-        #return False
-    #return True
+    url = None
+    try:
+        driver = get_driver()
+
+        try:
+            facebook_login_fun(driver,facebook_login,facebook_password)
+            print('success login')
+        except:
+            print('login failed')
+        try:
+            url = publish_post(driver,status,url_image=url_image)
+            print('success publish')
+        except:
+            print('publish failed')
+
+        exit_driver(driver)
+    except:
+        print("something went wrong")
+            #return False
+    return url
 
 def facebook_delete_post(facebook_login,facebook_password,n):
     driver = get_driver()

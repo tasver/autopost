@@ -24,8 +24,8 @@
                             <td >{{ post.tags }}</td>
                             <td >{{ post.already_posted }}</td>
                             <td class="test_inl ">
-                                <a href="{{ url_for('delete_task', post_id = post.id) }}" role="button" class="btn btn-outline-danger btn-sm ">Delete</a>
-                                <a href="{{ url_for('update_task', post_id = post.id) }}" role="button" class="btn btn-outline-info btn-sm ">Edit</a>
+                                <a href="{{ url_for('delete_notes', post_id = post.id) }}" role="button" class="btn btn-outline-danger btn-sm ">Delete</a>
+                                <a href="{{ url_for('update_notes', post_id = post.id) }}" role="button" class="btn btn-outline-info btn-sm ">Edit</a>
                             </td>
 
                         </tr>

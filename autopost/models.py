@@ -60,6 +60,7 @@ class Post(db.Model):
     already_posted = db.Column(db.Boolean())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
+
     __tablename__ = 'posts'
     socials = db.relationship('Social', secondary = association_table)
     #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))

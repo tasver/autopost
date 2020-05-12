@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+
 <div class="content-section">
     <form method="POST" action="" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
@@ -31,9 +32,9 @@
                     {{ form.content(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class="form-group " >
+            <div class="form-group">
                 {{ form.date_posted.label(class="form-control-label") }}
-                    {% if form.date_posted.errors %}
+                {% if form.date_posted.errors %}
                     {{ form.date_posted(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.date_posted.errors %}
@@ -44,9 +45,8 @@
                     {{ form.date_posted(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class="form-group " >
-                {{ form.time_posted.label(class="form-control-label") }}
-                    {% if form.time_posted.errors %}
+            <div class="form-group">
+                {% if form.time_posted.errors %}
                     {{ form.time_posted(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
                         {% for error in form.time_posted.errors %}
@@ -57,10 +57,6 @@
                     {{ form.time_posted(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-
-
-
-
 
 
             <div class="form-group">
@@ -77,16 +73,39 @@
                 {% endif %}
             </div>
 
+            <div class="form-group">
+                {{ form.image_file_url.label(class="form-control-label") }}
+                {% if form.image_file_url.errors %}
+                    {{ form.image_file_url(class="form-control form-control-sm is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.image_file_url.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.image_file_url(class="form-control form-control-sm") }}
+                {% endif %}
+            </div>
+
+
+
+
         </fieldset>
-        <form class="upload-form" action="{{ url_for('add_task') }}" method="POST" enctype="multipart/form-data">
+
+
+
+        <form class="upload-form" action="{{ url_for('update_notes', post_id = post.id) }}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
 
-
                 <p><input type="file" name="image_file"></p>
-                <button type="submit" class="btn btn-primary">SUBMIT</button>
-
+                <div class="test_inl">
+                    <button type="submit" class="btn btn-outline-primary">SUBMIT</button>
+                    <a href="{{ url_for('delete_notes', post_id = post.id) }}" role="button" class="btn btn-outline-danger ">Delete</a>
+                    <a href="{{ url_for('notes') }}" role="button" class="btn btn-outline-secondary ">EXIT</a>
+                </div>
             </div>
         </form>
     </form>
 </div>
+
 {% endblock content %}

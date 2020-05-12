@@ -2,16 +2,17 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import SelectField, widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField
-from wtforms.validators import InputRequired, DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms.validators import InputRequired, DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from autopost.models import User, Post, Project, Social
 from flask import flash, redirect, url_for, Markup
-
-from flask_ckeditor import CKEditorField
-
+from wtforms.fields.html5 import DateField
+#from wtforms_components import TimeField, TimeRange
+from wtforms.widgets.html5 import TimeInput
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose, AdminIndexView
 from flask_admin.form import rules
 from autopost import bcrypt
+import datetime
 
 
 class RegistrationForm(FlaskForm):
@@ -57,19 +58,30 @@ class UpdateAccountForm(FlaskForm):
             if user:
                 raise ValidationError('That email is taken. Please choose a different one.')
 
-class AddTask(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    date_posted = DateTimeField('Date Posted', format='%Y-%m-%d %H:%M')
-    image_file = FileField('Choose picture', validators=[FileAllowed(['jpg','png'])])
-    tags = TextAreaField('Tags')
-    already_posted = BooleanField('Already Posted?')
-    #project_id = SelectField('Select project', choices=Project.name)
 
-    #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+class AddTask(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()],render_kw={"placeholder": "It is your content title"})
+    content = TextAreaField('Content', validators=[DataRequired()],render_kw={"placeholder": "This is your main content"})
+    date_posted = DateField('Date Posted', format='%Y-%m-%d',render_kw={"placeholder": "Format date example: 2020-06-01"})
+    time_posted = DateTimeField('Time Posted',format='%H:%M',render_kw={"placeholder": "Format Time example: 20:30"})
+    image_file = FileField('Choose picture', validators=[FileAllowed(['jpg','png','mp4'])])
+    image_file_url = StringField('Your picture now: ' )
+    tags = TextAreaField('Tags',render_kw={"placeholder": "Write here your tags. Format:  #something #test "})
     submit = SubmitField('Add task')
 
+"""
+class NotesTask(FlaskForm):
+    title = StringField('Title', validators=[Optional(),],render_kw={"placeholder": "It is your content title"})
+    content = TextAreaField('Content', validators=[Optional(),],render_kw={"placeholder": "This is your main content"})
+    date_posted = DateField('Date Posted',format='%Y-%m-%d',render_kw={"placeholder": "Format date example: 2020-06-01"}, validators=[Optional()])
+    time_posted = DateTimeField('Time Posted',validators=[Optional()],format='%H:%M',render_kw={"placeholder": "Format Time example: 20:30"})
+    image_file = FileField('Choose picture', validators=[FileAllowed(['jpg','png','mp4'],Optional())])
+    image_file_url = StringField('Your picture now: ' )
+    tags = TextAreaField('Tags', validators=[Optional(),],render_kw={"placeholder": "Write here your tags. Format:  #something #test "})
+    submit = SubmitField('Add task')
+"""
 class AddProject(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
