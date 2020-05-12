@@ -1,7 +1,6 @@
 import requests
 from autopost.test_bot import *
 from worker import *
-from autopost.routes import add_task
 
 queue = Queue(connection=conn)
 #def test_facebook(facebook_login,facebook_password,test_publish,url_image=None):
