@@ -22,6 +22,7 @@ from pathlib import Path
 from time import sleep
 import time
 from autopost.test_bot import *
+from wtforms.utils import unset_value
 
 from autopost import driver
 from worker import *
@@ -98,10 +99,10 @@ def add_task():
             hour=24+hour
 
 
-        job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
-        registry = ScheduledJobRegistry(queue=queue)
-        print(job in registry)
-        print('Job id: %s' % job.id)
+        #job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
+        #registry = ScheduledJobRegistry(queue=queue)
+        #print(job in registry)
+        #print('Job id: %s' % job.id)
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
@@ -228,15 +229,6 @@ def update_task(post_id):
     form = AddTask(obj=user)
     choo_noth = [(0,None)] + socials_list
     form.socials.choices = choo_noth
-    #posts = Post.query.filter_by(user_id = user.id).all()
-    #sneed_socials2 = Social.query.join(association_table).join(Post).filter((association_table.c.social_id ==Social.id) &(association_table.c.post_id ==Post.id) )
-    #query_user_role = User.query.join(roles_users).join(Role).
-    #filter((roles_users.c.user_id == User.id) & (roles_users.c.role_id == Role.id)).all()
-
-    print(sneed_socials2)
-    form.socials.default = ['1']
-    form.process()
-
 
     if request.method == 'POST' and form.validate_on_submit():
         if form.image_file.data:
@@ -266,19 +258,40 @@ def update_task(post_id):
         post.date_posted = date_posted2
         post.image_file = file_path_3
         post.tags = form.tags.data
-        db.session.commit()
-
         soc = form.socials.data
         for elem in soc:
             test_int = int(str(elem))
             print(test_int)
-            post.socials.append(Social.query.get(test_int))
-            print('maybe success')
-            db.session.commit()
+            if test_int != 0:
+                post.socials.append(Social.query.get(test_int))
+                print('maybe success')
+                db.session.commit()
+            elif test_int ==0:
+                print("valu = 0")
+            else:
+                #flash('Your can not choose nothing', 'danger')
+                print("not value")
 
+
+        db.session.commit()
         flash('Your task hes been updated!', 'success')
         return redirect(url_for('home'))
+
     elif request.method == 'GET':
+        test_default = []
+        teeeeest_post = Post.query.filter_by(id = post.id).all()
+        print(teeeeest_post)
+        len_soc = len(post.socials)
+        if len_soc>0:
+            print(post.socials)
+            for elem in post.socials:
+                tmp_default = str(elem.id)
+                test_default.append(tmp_default)
+        print(test_default)
+        if len(test_default)>0:
+            form.socials.default = test_default
+            form.process()
+
         form.title.data = post.title
         form.content.data = post.content
         form.date_posted.data = post.date_posted
@@ -286,7 +299,6 @@ def update_task(post_id):
         form.image_file.data = post.image_file
         form.tags.data = post.tags
         form.image_file_url.data = post.image_file
-
 
 
     return render_template('update_task.html', title='Update Task' , form  = form, legend = 'Update Task',post = post)

@@ -109,7 +109,7 @@ class AddSocial(FlaskForm):
     #project_id = SelectField('Select project', choices=Project.name)
 
     #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    submit = SubmitField('Add task')
+    submit = SubmitField('Add social')
 
 
 class AdminUserCreateForm(FlaskForm):
