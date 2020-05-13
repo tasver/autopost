@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+        <article class="media content-section article-metadata">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 16% " scope="col"> Name </th>
+                        <th style="width: 32% " scope="col"> Posts </th>
+                        <th style="width: 32% " scope="col"> Socials </th>
+                        <th style="width: 20% " scope="col"> Change </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects.items %}
+                        <tr>
+
+                            <td scope="row">{{ project.name }}</td>
+                            <td>
+                                {% for post in project.posts %}
+                                  <a href="{{ url_for('update_task', post_id = post.id) }}"> <p> {{ post.title }}  </p><hr></a>
+                                {% endfor %}
+                            </td>
+
+                            <td>
+                                {% for social in project.socials %}
+                                  <a href="#"> <p> login: {{ social.login }} || social: {{ social.type }}  </p><hr></a>
+                                {% endfor %}
+                            </td>
+                            <td class="test_inl ">
+                                <a href="#" role="button" class="btn btn-outline-info btn-sm ">Add</a>
+                                <a href="#" role="button" class="btn btn-outline-danger btn-sm ">Delete</a>
+                                <a href="#" role="button" class="btn btn-outline-info btn-sm ">Edit</a>
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </article>
+
+    {% for page_num in projects.iter_pages(left_edge = 1, right_edge = 1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if projects.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('projects', page = page_num) }}" >{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn_outline-info mb-4" href="{{ url_for('projects', page = page_num) }}" >{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}

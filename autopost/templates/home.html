@@ -9,7 +9,8 @@
                     <tr>
                         <th style="width: 15% " scope="col"> Date posted </th>
                         <th style="width: 20% " scope="col"> Title </th>
-                        <th style="width: 35% " scope="col"> Content </th>
+                        <th style="width: 25% " scope="col"> Content </th>
+                        <th style="width: 10% " scope="col"> Socials </th>
                         <th style="width: 10% " scope="col"> Tags </th>
                         <th style="width: 6% " scope="col"> Alr posted </th>
                         <th style="width: 14% " scope="col"> Change </th>
@@ -21,6 +22,11 @@
                             <th  scope="row"><small>{{ post.date_posted }}</small></th>
                             <td >{{ post.title }}</td>
                             <td >{{ post.content }}</td>
+                            <td>
+                                {% for social in post.socials %}
+                                  <a href="#"> <p> {{ social.login }}  {{ social.type }}  </p></a>
+                                {% endfor %}
+                            </td>
                             <td >{{ post.tags }}</td>
                             <td >{{ post.already_posted }}</td>
                             <td class="test_inl ">

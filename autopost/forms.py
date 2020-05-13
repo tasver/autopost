@@ -1,7 +1,7 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import SelectField, widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField
+from wtforms import SelectField, widgets, DateTimeField, StringField, PasswordField, SubmitField, BooleanField,TextAreaField,SelectMultipleField
 from wtforms.validators import InputRequired, DataRequired, Length, Email, EqualTo, ValidationError, Optional
 from autopost.models import User, Post, Project, Social
 from flask import flash, redirect, url_for, Markup
@@ -69,6 +69,8 @@ class AddTask(FlaskForm):
     image_file = FileField('Choose picture', validators=[FileAllowed(['jpg','png','mp4'])])
     image_file_url = StringField('Your picture now: ' )
     tags = TextAreaField('Tags',render_kw={"placeholder": "Write here your tags. Format:  #something #test "})
+    #my_choices = [('1', 'Choice1'), ('2', 'Choice2'), ('3', 'Choice3')]
+    socials = SelectMultipleField('Socials', coerce=int,validators=[Optional()])
     submit = SubmitField('Add task')
 
 """
@@ -87,7 +89,16 @@ class AddProject(FlaskForm):
     #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
     #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     submit = SubmitField('Add Project')
-
+"""
+class UpdateProject(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()],render_kw={"placeholder": "It is your content title"})
+    content = TextAreaField('Content', validators=[DataRequired()],render_kw={"placeholder": "This is your main content"})
+    nickname = StringField('Nickname', validators=[DataRequired()])
+    #type = SelectField(u'Type', choices=[('Instagram', 'Instagram'),\
+    #                       ('Facebook', 'Facebook'), ('Twitter', 'Twitter')])
+    submit = SubmitField('Update Project')
+"""
 class AddSocial(FlaskForm):
     login = StringField('Login', validators=[DataRequired()])
     password = PasswordField('Password',validators = [DataRequired()])

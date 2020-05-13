@@ -23,7 +23,7 @@ from time import sleep
 import time
 from autopost.test_bot import *
 
-from autopost import driver
+#from autopost import driver
 from worker import *
 from utils import *
 
@@ -107,7 +107,7 @@ def add_task():
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
 
 
-
+"""
 @app.route("/add_project", methods=['GET', 'POST'])
 @login_required
 def add_project():
@@ -121,7 +121,7 @@ def add_project():
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_project.html', title='New Project', form = form, legend = 'New project')
-
+"""
 @app.route("/add_social", methods=['GET', 'POST'])
 @login_required
 def add_social():
@@ -218,10 +218,25 @@ def admin_login_required(func):
 @app.route("/task/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_task(post_id):
-    form = AddTask()
+
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         abort(403)
+    user = current_user
+    need_socials = Social.query.filter_by(user_id = user.id).all()
+    socials_list = [(i.id, i.login +"|"+ i.type ) for i in need_socials]
+    form = AddTask(obj=user)
+    choo_noth = [(0,None)] + socials_list
+    form.socials.choices = choo_noth
+    #posts = Post.query.filter_by(user_id = user.id).all()
+    #sneed_socials2 = Social.query.join(association_table).join(Post).filter((association_table.c.social_id ==Social.id) &(association_table.c.post_id ==Post.id) )
+    #query_user_role = User.query.join(roles_users).join(Role).
+    #filter((roles_users.c.user_id == User.id) & (roles_users.c.role_id == Role.id)).all()
+
+    print(sneed_socials2)
+    form.socials.default = ['1']
+    form.process()
+
 
     if request.method == 'POST' and form.validate_on_submit():
         if form.image_file.data:
@@ -251,8 +266,16 @@ def update_task(post_id):
         post.date_posted = date_posted2
         post.image_file = file_path_3
         post.tags = form.tags.data
-
         db.session.commit()
+
+        soc = form.socials.data
+        for elem in soc:
+            test_int = int(str(elem))
+            print(test_int)
+            post.socials.append(Social.query.get(test_int))
+            print('maybe success')
+            db.session.commit()
+
         flash('Your task hes been updated!', 'success')
         return redirect(url_for('home'))
     elif request.method == 'GET':
@@ -263,6 +286,9 @@ def update_task(post_id):
         form.image_file.data = post.image_file
         form.tags.data = post.tags
         form.image_file_url.data = post.image_file
+
+
+
     return render_template('update_task.html', title='Update Task' , form  = form, legend = 'Update Task',post = post)
 
 @app.route("/post/<int:post_id>/delete", methods=['GET', 'POST'])
@@ -276,7 +302,69 @@ def delete_task(post_id):
     flash('Your post hes been deleted!', 'success')
     return redirect(url_for('home'))
 """
+@app.route("/projects")
+def projects():
+    if current_user.is_authenticated:
+        username = current_user.username
+        user = User.query.filter_by(username=username).first_or_404()
+        page = request.args.get('page', 1, type=int)
+        projects = Project.query.filter_by(user_id=user.id).order_by(Project.id.desc()).paginate(page, 1, False)
 
+        return render_template('projects.html', user=user, projects=projects)
+    else:
+        return redirect(url_for('home'))
+
+@app.route("/project/<int:project_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    if project.own_project != current_user:
+        abort(403)
+    return render_template('update_project.html', title='Update Project' ,  legend = 'Update Project',project= project)
+
+
+@app.route("/project/<int:project_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_project(project_id):
+    form = ProjectAdminView()
+    
+    project = Project.query.get_or_404(project_id)
+    user = current_user
+    post = Post.query.filter_by(user_id=user.id).order_by(Post.id.desc())
+    user = User.query.filter_by(email=form.email.data).first()
+    if post.author != current_user:
+        abort(403)
+    if project.own_project != current_user:
+        abort(403)
+
+    if request.method == 'POST' and form.validate_on_submit():
+        project.name = form.name.data
+        db.session.commit()
+        flash('Your project hes been updated!', 'success')
+        return redirect(url_for('home'))
+    elif request.method == 'GET':
+        form.name.data = project.name
+
+        form.title.data = post.title
+        form.content.data = post.content
+
+        form.nickname.data = post.date_posted
+
+    return render_template('update_task.html', title='Update Task' , form  = form, legend = 'Update Task',post = post)
+
+@app.route("/project/<int:project_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_project(project_id):
+    project = Project.query.get_or_404(project_id)
+    if project.own_project != current_user:
+        abort(403)
+    db.session.delete(project)
+    db.session.commit()
+    flash('Your project hes been deleted!', 'success')
+    return redirect(url_for('projects'))
+
+"""
+"""
 @app.route("/notes")
 def notes():
     if current_user.is_authenticated:

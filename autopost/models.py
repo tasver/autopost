@@ -49,7 +49,6 @@ association_table = db.Table('association_table', db.Model.metadata,
     db.Column('Post_id', db.Integer, db.ForeignKey('posts.id'))
 )
 
-
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -59,25 +58,25 @@ class Post(db.Model):
     tags = db.Column(db.Text)
     already_posted = db.Column(db.Boolean())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-
+    job_id = db.Column(db.String(200))
+    link_post = db.Column(db.String(200))
+    notes = db.Column(db.Boolean())
 
     __tablename__ = 'posts'
-    socials = db.relationship('Social', secondary = association_table)
+    socials = db.relationship('Social', secondary = association_table,backref=db.backref('socials', lazy='dynamic'))
     #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
     def __repr__(self):
         return self.title
-
 
 class Social(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(120), nullable=False)
     type = db.Column(db.String(30), nullable=False)
-
     __tablename__ = 'socials'
-    posts = db.relationship('Post', secondary=association_table)
-
+    posts = db.relationship('Post', secondary=association_table,backref=db.backref('posts', lazy='dynamic'))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):

@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.file_detector import *
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
-from autopost import driver
+#from autopost import driver
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 import time
@@ -17,10 +17,10 @@ import os
 from autopost.resources import *
 
 
-#chrome_options = webdriver.ChromeOptions()
-#chrome_options.add_argument("--no-sandbox")
-#prefs = {"profile.default_content_setting_values.notifications" : 2}
-#chrome_options.add_experimental_option("prefs",prefs)
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--no-sandbox")
+prefs = {"profile.default_content_setting_values.notifications" : 2}
+chrome_options.add_experimental_option("prefs",prefs)
 
 facebook_email = './/*[@id="email"]'
 facebook_password_field = './/*[@id="pass"]'
