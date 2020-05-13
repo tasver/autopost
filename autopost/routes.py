@@ -315,7 +315,6 @@ def delete_task(post_id):
     return redirect(url_for('home'))
 
 
-
 @app.route("/socials")
 def socials():
     if current_user.is_authenticated:

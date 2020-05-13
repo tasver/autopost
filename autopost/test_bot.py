@@ -58,10 +58,9 @@ def exit_driver(driver):
     driver.quit()
 
 def publish_post(driver,status_message,url_image=None):
-    time.sleep(2)
-    time.sleep(1.5)
+    time.sleep(3)
     test_frame = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
-    print('still working before pyperclip')
+
     if url_image!= None:
         sleep(1.5)
         input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(url_image)
@@ -101,19 +100,40 @@ def publish_post(driver,status_message,url_image=None):
             button.click()
             print('button pressed')
             break
-    time.sleep(2)
-    go_to_profile(driver)
+    time.sleep(7)
     url = get_post(driver,0)
+    time.sleep(2)
 
     return url
 
-def publish_post_public(driver,url,status_message):
-
+def publish_post_public(driver,url,status_message,url_image=None):
     driver.get(url)
     WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']")))
 
-    driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
-    time.sleep(5)
+    if url_image!= None:
+        sleep(1.5)
+        input = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(url_image)
+        time.sleep(2)
+        elem = driver.switch_to_active_element()
+        elem.send_keys(Keys.ENTER)
+        elem.send_keys(Keys.ENTER)
+        url_image_len2 = len(url_image)
+        while url_image_len2>-10:
+            try:
+                elem.send_keys(Keys.BACKSPACE)
+                print('delete')
+                url_image_len2 = url_image_len2-1
+            except:
+                print('Somethi wrong2')
+        time.sleep(4)
+
+        #driver.find_element_by_xpath("//div[@aria-label='Відхилити']").click()
+        elem.send_keys(status_message)
+        print('send message')
+        time.sleep(5)
+    else:
+        ext_to_put_to_clipboard = driver.find_element_by_xpath("//div[starts-with(@id, 'u_0_')]//textarea[@name='xhpc_message']").send_keys(status_message)
+    time.sleep(7)
     buttons = driver.find_elements_by_tag_name('button')
     time.sleep(4)
     for button in buttons:
@@ -126,7 +146,11 @@ def publish_post_public(driver,url,status_message):
         elif button.text=='Отправить':
             button.click()
             break
-    time.sleep(5)
+    time.sleep(7)
+
+    url_ret = get_post_public(driver,0,url)
+
+    return url_ret
 
 def go_to_profile(driver):
     profile = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//a[@accesskey='2']")))
@@ -135,13 +159,27 @@ def go_to_profile(driver):
 
 def get_post(driver,n):
     go_to_profile(driver)
+    time.sleep(4)
     WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//div[@data-testid='story-subtitle']")))
     driver.find_elements_by_xpath("//div[@data-testid='story-subtitle']")
     posts = driver.find_elements_by_class_name("timestampContent")
     posts[n].click()
-    time.sleep(2)
+    time.sleep(4)
     url = driver.current_url
     return str(url)
+
+def get_post_public(driver,n,url):
+    time.sleep(3)
+    driver.get(url)
+    time.sleep(4)
+    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//div[@data-testid='story-subtitle']")))
+    driver.find_elements_by_xpath("//div[@data-testid='story-subtitle']")
+    posts = driver.find_elements_by_class_name("timestampContent")
+    posts[n].click()
+    time.sleep(4)
+    url_ret = driver.current_url
+    time.sleep(2)
+    return str(url_ret)
 
 def get_mobile_post(driver,n):
     go_to_profile(driver)
@@ -155,8 +193,17 @@ def get_mobile_post(driver,n):
     posts = driver.find_elements_by_tag_name("abbr")
     posts[n].click()
     time.sleep(2)
+    time.sleep(4)
+    url_ret = driver.current_url
+    time.sleep(2)
+    return str(url_ret)
 
-    return str(url)
+def get_mobile_post_url(driver,url):
+    url2 = url[12:]
+    mobile_url = 'https://.m.' + url2
+    driver.get(mobile_url)
+    time.sleep(2)
+    return str(mobile_url)
 
 def get_all_posts(driver):
     post_links = []
@@ -174,16 +221,16 @@ def get_all_posts(driver):
             temp = False
     return post_links
 
-def delete_post(driver,n):
-    test = get_mobile_post(driver,n)
-    time.sleep(1.5)
+def delete_post(driver,url):
+    test = get_mobile_post_url(driver,url)
+    time.sleep(3.5)
     driver.find_element_by_xpath('//a[@aria-haspopup="true"]').click()
-    time.sleep(1.5)
+    time.sleep(3.5)
     WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, '//a[@data-sigil="touchable touchable removeStoryButton enabled_action"]'))).click()
     time.sleep(3)
     buttons = driver.find_elements_by_xpath('//a[@role="button"]')
     #print(buttons)
-    time.sleep(2)
+    time.sleep(4)
     for button in buttons:
         if button.text=='Видалити':
             button.click()
@@ -194,7 +241,7 @@ def delete_post(driver,n):
         elif button.text=='Удалить':
             button.click()
             break
-    time.sleep(3)
+    time.sleep(5)
 
 
 def facebook_create_post(facebook_login,facebook_password,status,url_image=None):
@@ -219,17 +266,49 @@ def facebook_create_post(facebook_login,facebook_password,status,url_image=None)
             #return False
     return url
 
-def facebook_delete_post(facebook_login,facebook_password,n):
-    driver = get_driver()
-    facebook_login_fun(driver,facebook_login,facebook_password)
-    delete_post(driver,n)
-    exit_driver(driver)
+def facebook_create_post_public(facebook_login,facebook_password,status,url_image=None,url=None):
+    url_ret = None
+    try:
+        driver = get_driver()
+        try:
+            facebook_login_fun(driver,facebook_login,facebook_password)
+            print('success login')
+        except:
+            print('login failed')
+        try:
+            url_ret = publish_post_public(driver,url,status,url_image=url_image)
+            url_ret = url_ret[:84]
+            print('success publish in public')
+        except:
+            print('publish public failed')
+        exit_driver(driver)
+    except:
+        print("something went wrong")
+            #return False
+    return url_ret
 
-def facebook_create_post_to_public(facebook_login,facebook_password,url,status):
-    driver = get_driver()
-    facebook_login_fun(driver,facebook_login,facebook_password)
-    publish_post_public(driver,url,status)
-    exit_driver(driver)
+def facebook_delete_post(facebook_login,facebook_password,url):
+    try:
+        driver = get_driver()
+        try:
+            facebook_login_fun(driver,facebook_login,facebook_password)
+            print('success login')
+        except:
+            print('login failed')
+        try:
+            delete_post(driver,url)
+            print('success delete')
+        except:
+            print('delete failed')
+        exit_driver(driver)
+    except:
+        print("something went wrong, dont delete")
+
+#def facebook_create_post_to_public(facebook_login,facebook_password,url,status):
+#    driver = get_driver()
+#    facebook_login_fun(driver,facebook_login,facebook_password)
+#    publish_post_public(driver,url,status)
+#    exit_driver(driver)
 
 #facebook_create_post(facebook_login,facebook_password,"test333")
 #go_to_profile()
