@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return self.username
 
-    def __init__(self, username, email, password, admin=True):
+    def __init__(self, username, email, password, admin=False):
         self.username = username
         self.email = email
         self.password = password
