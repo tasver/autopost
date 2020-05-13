@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+        <article class="media content-section article-metadata">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 20% " scope="col"> Login </th>
+                        <th style="width: 20% " scope="col"> Type </th>
+                        <th style="width: 40% " scope="col"> Posts </th>
+                        <th style="width: 20% " scope="col"> Change </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for social in socials.items %}
+                        <tr>
+                            <td  scope="row">{{ social.login }}</td>
+                            <td >{{ social.type }}</td>
+                            <td>
+                                {% for post in social.posts %}
+                                  <a href="#"> <p> {{ post.title }}  </p></a>
+                                {% endfor %}
+                            </td>
+                            <td class="test_inl ">
+                                <a href="{{ url_for('delete_social', social_id  = social.id) }}" role="button" class="btn btn-outline-danger btn-sm ">Delete</a>
+                                <a href="{{ url_for('update_social', social_id  = social.id) }}" role="button" class="btn btn-outline-info btn-sm ">Edit</a>
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </article>
+
+    {% for page_num in socials.iter_pages(left_edge = 1, right_edge = 1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if socials.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('home', page = page_num) }}" >{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn_outline-info mb-4" href="{{ url_for('home', page = page_num) }}" >{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}

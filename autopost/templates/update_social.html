@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="content-section">
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+            <div class="form-group">
+                {{ form.login.label(class="form-control-label") }}
+                {% if form.login.errors %}
+                    {{ form.login(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.login.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.login(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.passwordcheck.label(class="form-control-label") }}
+                {% if form.passwordcheck.errors %}
+                    {{ form.passwordcheck(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.passwordcheck.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.passwordcheck(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.new_password.label(class="form-control-label") }}
+                {% if form.new_password.errors %}
+                    {{ form.new_password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.new_password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.new_password(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+
+
+        </fieldset>
+
+
+
+        <form class="upload-form" action="{{ url_for('update_social', social_id  = social.id) }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+
+                <div class="test_inl">
+                    <button type="submit" class="btn btn-outline-primary">SUBMIT</button>
+                    <a href="{{ url_for('delete_social', social_id  = social.id) }}" role="button" class="btn btn-outline-danger ">Delete</a>
+                    <a href="{{ url_for('socials') }}" role="button" class="btn btn-outline-secondary ">EXIT</a>
+                </div>
+            </div>
+        </form>
+    </form>
+</div>
+
+{% endblock content %}

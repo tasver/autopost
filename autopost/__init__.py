@@ -17,6 +17,8 @@ app = Flask(__name__)
 #basedir = os.path.abspath(os.path.dirname(__file__))'
 
 
+
+"""
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 chrome_options.add_argument("--headless")
@@ -26,9 +28,11 @@ prefs = {"profile.default_content_setting_values.notifications" : 2}
 chrome_options.add_experimental_option("prefs",prefs)
 driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
 
-
+"""
 app.config.from_pyfile(config_file)
 db = SQLAlchemy(app)
+
+
 
 migrate = Migrate(app,db)
 manager = Manager(app)

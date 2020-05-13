@@ -24,7 +24,7 @@ import time
 from autopost.test_bot import *
 from wtforms.utils import unset_value
 
-from autopost import driver
+#from autopost import driver
 from worker import *
 from utils import *
 
@@ -135,7 +135,7 @@ def add_social():
         db.session.add(social)
         db.session.commit()
         flash('Your task has been created!', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('socials'))
     return render_template('create_social.html', title='New social', form = form, legend = 'New social')
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -190,7 +190,7 @@ def account():
             db.session.commit()
             flash('Success. You change your account', 'success')
         else:
-            flash('Unsuccess. Please check correct of uor input data', 'danger')
+            flash('Unsuccess. Please check correct of yuor input data', 'danger')
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
@@ -281,12 +281,12 @@ def update_task(post_id):
         test_default = []
         teeeeest_post = Post.query.filter_by(id = post.id).all()
         print(teeeeest_post)
-        len_soc = len(post.socials)
-        if len_soc>0:
-            print(post.socials)
-            for elem in post.socials:
-                tmp_default = str(elem.id)
-                test_default.append(tmp_default)
+        #len_soc = len(post.socials)
+        #if len_soc>0:
+            #print(post.socials)
+        for elem in post.socials:
+            tmp_default = str(elem.id)
+            test_default.append(tmp_default)
         print(test_default)
         if len(test_default)>0:
             form.socials.default = test_default
@@ -313,6 +313,73 @@ def delete_task(post_id):
     db.session.commit()
     flash('Your post hes been deleted!', 'success')
     return redirect(url_for('home'))
+
+
+
+@app.route("/socials")
+def socials():
+    if current_user.is_authenticated:
+        username = current_user.username
+        user = User.query.filter_by(username=username).first_or_404()
+        page = request.args.get('page', 1, type=int)
+        socials = Social.query.filter_by(user_id=user.id).order_by(Social.id.desc()).paginate(page, 5, False)
+
+
+
+        return render_template('socials.html', user=user, socials=socials)
+
+
+    else:
+        return redirect(url_for('home'))
+
+
+@app.route("/social/<int:social_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_social(social_id):
+    social = Social.query.get_or_404(social_id)
+    form = UpdateSocial()
+    if request.method == 'POST' and form.validate_on_submit():
+        if bcrypt.check_password_hash(social.password, form.passwordcheck.data):
+            hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+            social.password = hashed_password
+            social.login = form.login.data
+            db.session.commit()
+            flash('Success. You change your social account', 'success')
+        else:
+            flash('Unsuccess. Please check correct of yuor input data', 'danger')
+        return redirect(url_for('socials'))
+    elif request.method == 'GET':
+        form.login.data = social.login
+        #form.type.choices
+    return render_template('update_social.html', title='Update Social account' , form  = form, legend = 'Update Social account',social = social)
+
+@app.route("/social/<int:social_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_social(social_id):
+    social = Social.query.get_or_404(social_id)
+    if social.owner != current_user:
+        abort(403)
+    #postsss = Post.query.all()
+    #for post in postsss:
+
+    #def remove_tag(tag_id):
+    #tag = Tag.query.get(tag_id)
+
+
+    #for post in social.posts:
+    #    p = Post.query.get(post.id)
+    #    p.socials.remove(social)
+
+
+        #post.socials.remove(social)
+        #social.posts.remove()
+
+    db.session.delete(social)
+    db.session.commit()
+    flash('Your social hes been deleted!', 'success')
+    return redirect(url_for('socials'))
+
+
 """
 @app.route("/projects")
 def projects():

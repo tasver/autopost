@@ -106,11 +106,19 @@ class AddSocial(FlaskForm):
     type = SelectField(u'Type', choices=[('Instagram', 'Instagram'),\
                            ('Facebook', 'Facebook'), ('Twitter', 'Twitter')])
 
+
     #project_id = SelectField('Select project', choices=Project.name)
 
     #user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     submit = SubmitField('Add social')
 
+class UpdateSocial(FlaskForm):
+    login = StringField('Login', validators=[DataRequired()])
+    new_password = PasswordField('New password',validators = [DataRequired()])
+    passwordcheck = PasswordField('Old password',validators = [DataRequired()])
+
+
+    submit = SubmitField('Add social')
 
 class AdminUserCreateForm(FlaskForm):
     username = StringField('Username', [InputRequired()])
@@ -180,7 +188,7 @@ class PostAdminView(ModelView):
     column_sortable_list = ('title', 'already_posted','date_posted')
     details_template = 'details.html'
 
-    can_view_details = True
+    #can_view_details = True
     column_details_list = ('type','login','socials')
     #form_overrides = dict(about=CKEditorField)
     create_template = 'create.html'
@@ -195,7 +203,7 @@ class ProjectAdminView(ModelView):
     create_template = 'create.html'
     edit_template = 'edit.html'
     details_template = 'details.html'
-    can_view_details = True
+    #can_view_details = True
     column_details_list = ('name','socials','posts')
     def _get_list_value(self, context, model, name, column_formatters,
                     column_type_formatters):
@@ -260,7 +268,7 @@ class SocialAdminView(ModelView):
     create_template = 'create.html'
     edit_template = 'edit.html'
     details_template = 'details.html'
-    can_view_details = True
+    #can_view_details = True
     column_details_list = ('type','login','posts')
     #column_exclude_list = ('password',)
     #form_excluded_columns = ('password',)

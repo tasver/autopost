@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return self.username
 
-    def __init__(self, username, email, password, admin=False):
+    def __init__(self, username, email, password, admin=True):
         self.username = username
         self.email = email
         self.password = password
@@ -46,7 +46,8 @@ class Project(db.Model):
 
 association_table = db.Table('association_table', db.Model.metadata,
     db.Column('Socials_id', db.Integer, db.ForeignKey('socials.id')),
-    db.Column('Post_id', db.Integer, db.ForeignKey('posts.id'))
+    db.Column('Post_id', db.Integer, db.ForeignKey('posts.id')),
+    db.UniqueConstraint('Socials_id', 'Post_id', name='UC_social_id_post_id')
 )
 
 class Post(db.Model):
@@ -63,7 +64,7 @@ class Post(db.Model):
     notes = db.Column(db.Boolean())
 
     __tablename__ = 'posts'
-    socials = db.relationship('Social', secondary = association_table,backref=db.backref('socials', lazy='dynamic'))
+    socials = db.relationship('Social', secondary = association_table,back_populates='posts',  lazy='dynamic')
     #social_id = db.Column(db.Integer, db.ForeignKey('social.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -76,7 +77,7 @@ class Social(db.Model):
     password = db.Column(db.String(120), nullable=False)
     type = db.Column(db.String(30), nullable=False)
     __tablename__ = 'socials'
-    posts = db.relationship('Post', secondary=association_table,backref=db.backref('posts', lazy='dynamic'))
+    posts = db.relationship('Post', secondary=association_table,back_populates='socials', lazy='dynamic')
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     def __repr__(self):
