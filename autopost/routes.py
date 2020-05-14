@@ -24,7 +24,7 @@ import time
 from autopost.test_bot import *
 from wtforms.utils import unset_value
 
-#from autopost import driver
+from autopost import driver
 from worker import *
 from utils import *
 
