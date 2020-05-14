@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return self.username
 
-    def __init__(self, username, email, password, admin=True):
+    def __init__(self, username, email, password, admin=False):
         self.username = username
         self.email = email
         self.password = password
@@ -60,7 +60,7 @@ class Post(db.Model):
     already_posted = db.Column(db.Boolean())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     job_id = db.Column(db.String(200))
-    link_post = db.Column(db.String(200))
+    link_post = db.Column(db.String(1000))
     notes = db.Column(db.Boolean())
 
     __tablename__ = 'posts'

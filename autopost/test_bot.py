@@ -6,11 +6,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.file_detector import *
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
-#from autopost import driver
+from autopost import driver
 from webdriver_manager.chrome import ChromeDriverManager
 from time import sleep
 import time
-
+from autopost.routes import *
 from bs4 import BeautifulSoup
 #from autopost.settings import PATH
 import os
@@ -26,15 +26,15 @@ facebook_email = './/*[@id="email"]'
 facebook_password_field = './/*[@id="pass"]'
 facebook_login_button = './/*[@id="loginbutton"]'
 
-url = 'https://www.facebook.com/Test_dyploma-autopost-105020864533772/?modal=admin_todo_tour'
-status_message = 'HI, it is test8.19df'
-facebook_login = '380669288859'
-facebook_password = 'Kamaro1231'
+#url = 'https://www.facebook.com/Test_dyploma-autopost-105020864533772/?modal=admin_todo_tour'
+#status_message = 'HI, it is test8.19df'
+#facebook_login = '380669288859'
+#facebook_password = 'Kamaro1231'
 
 #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', chrome_options=chrome_options)
 
 def get_driver():
-    driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', options=chrome_options)
+    #driver = webdriver.Chrome(executable_path='/home/tasver/python/Autopost/autopost/chromedriver', options=chrome_options)
     get_driv=driver
     return get_driv
 
@@ -42,10 +42,10 @@ def facebook_login_fun(driver,login,password):
     status = False
     driver.get('https://www.facebook.com')
     facebook_email_element = driver.find_element_by_xpath(facebook_email)
-    facebook_email_element.send_keys(facebook_login)
+    facebook_email_element.send_keys(login)
     time.sleep(1.5)
     facebook_password_element = driver.find_element_by_xpath(facebook_password_field)
-    facebook_password_element.send_keys(facebook_password)
+    facebook_password_element.send_keys(password)
     time.sleep(1.5)
     facebook_login_element = driver.find_element_by_xpath(facebook_login_button)
     facebook_login_element.click()
@@ -244,7 +244,7 @@ def delete_post(driver,url):
     time.sleep(5)
 
 
-def facebook_create_post(facebook_login,facebook_password,status,url_image=None):
+def facebook_create_post(facebook_login=None,facebook_password=None,status=None,url_image=None):
     url = None
     try:
         driver = get_driver()

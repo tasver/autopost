@@ -103,8 +103,8 @@ class AddSocial(FlaskForm):
     login = StringField('Login', validators=[DataRequired()])
     password = PasswordField('Password',validators = [DataRequired()])
     #type = StringField('Type', validators=[DataRequired()])
-    type = SelectField(u'Type', choices=[('Instagram', 'Instagram'),\
-                           ('Facebook', 'Facebook'), ('Twitter', 'Twitter')])
+    type = SelectField(u'Type', choices=[('Facebook', 'Facebook'),\
+                       ('Instagram', 'Instagram'), ('Twitter', 'Twitter')])
 
 
     #project_id = SelectField('Select project', choices=Project.name)

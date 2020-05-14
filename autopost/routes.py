@@ -24,7 +24,7 @@ import time
 from autopost.test_bot import *
 from wtforms.utils import unset_value
 
-#from autopost import driver
+from autopost import driver
 from worker import *
 from utils import *
 
@@ -231,6 +231,16 @@ def update_task(post_id):
     form.socials.choices = choo_noth
 
     if request.method == 'POST' and form.validate_on_submit():
+
+        sommm = post.socials
+        for elem in sommm:
+            print(elem)
+            post.socials.remove(elem)
+            elem.posts.remove(post)
+        db.session.commit()
+
+        file_path = post.image_file
+
         if form.image_file.data:
             file = request.files['image_file']
             nameee = request.files['image_file'].filename
@@ -246,7 +256,7 @@ def update_task(post_id):
             file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
 
         else:
-            file_path_3 = "no file"
+            file_path_3 = file_path
         date_test = str(form.date_posted.data)
         time_test = str(form.time_posted.data)
         time_te = time_test[11:]
@@ -259,16 +269,26 @@ def update_task(post_id):
         post.image_file = file_path_3
         post.tags = form.tags.data
         soc = form.socials.data
+
+
         for elem in soc:
             test_int = int(str(elem))
             elem_soc = Social.query.get(test_int)
+            print(elem_soc)
             print(test_int)
             if test_int != 0:
                 post.socials.append(elem_soc)
                 print('maybe success')
                 db.session.commit()
             elif test_int ==0:
-                post.socials.remove(elem_soc)
+                sommm = post.socials
+                for elem in sommm:
+                    print(elem)
+                    post.socials.remove(elem)
+                    elem.posts.remove(post)
+                #elem_soc.posts.remove(post)
+                #post.socials.remove(elem_soc)
+                #elem_soc.posts.remove(post)
                 db.session.commit()
                 print("valu = 0")
             else:
@@ -386,19 +406,45 @@ def publish_task(post_id):
         print(test)
     else:
         test = None
-    #test_datetime = post.date_posted
-    #take_day,take_time = str(test_datetime).split(' ')
-    #year,month,day = take_day.split('-')
-    #hour_ser,minute,seconds = take_time.split(':')
-    #hour = int(hour_ser) - 3
-    #if hour<0:
-    #    hour=24+hour
-    for soc in post.socials:
-        url = facebook_create_post(soc.login,soc.password,test_publish,test)
-        print('success')
-        print(soc)
-        print(url)
 
+    tmp = 0
+    for soc in post.socials:
+        tmp = tmp+1
+
+    if tmp>0:
+        for soc in post.socials:
+            if soc.type =='Facebook':
+                print('its facebook')
+                #url = facebook_create_post(soc.login,soc.password,test_publish,test)
+                job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
+                post.job_id = job
+                print(job)
+                #alr_posts = str(post.link_post)
+                #facebook_url = "facebook: " + url + " "
+                #post.link_post = alr_posts + facebook_url
+                #print(alr_posts + facebook_url)
+                print('success')
+                print(soc)
+                #print(url)
+            if soc.type =='Instagram':
+                alr_posts = str(post.link_post)
+                url = 'test'
+                instagram_url = "instagram: " + url + " "
+                post.link_post = alr_posts + instagram_url
+                print(alr_posts + instagram_url)
+                print('its instagram')
+            if soc.type =='Twitter':
+                url="test"
+                alr_posts = str(post.link_post)
+                twitter_url = "twitter: " + url + " "
+                post.link_post = alr_posts + twitter_url
+                print(alr_posts + twitter_url)
+                print('its twitter')
+        post.already_posted = True
+        flash('Your post will publish now!', 'success')
+    else:
+        post.already_posted = False
+        flash('Your post not publish now, please choose your social!', 'danger')
 
     #job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
     #registry = ScheduledJobRegistry(queue=queue)
@@ -406,7 +452,7 @@ def publish_task(post_id):
     #print('Job id: %s' % job.id)
 
     db.session.commit()
-    flash('Your post will publish now!', 'success')
+
     return redirect(url_for('home'))
 
 @app.route("/post/<int:post_id>/addqueue", methods=['GET', 'POST'])
@@ -415,8 +461,75 @@ def add_to_queue_task(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         abort(403)
+    test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
+    test = None
+    if post.image_file!=None and post.image_file!="no file":
+        #key = post.image_file
+        test = post.image_file
+        print(test)
+    else:
+        test = None
+
+    test_datetime = post.date_posted
+    take_day,take_time = str(test_datetime).split(' ')
+    year,month,day = take_day.split('-')
+    hour_ser,minute,seconds = take_time.split(':')
+    hour = int(hour_ser) - 3
+    if hour<0:
+        hour=24+hour
+
+    tmp = 0
+    for soc in post.socials:
+        tmp = tmp+1
+
+    if tmp>0:
+        for soc in post.socials:
+            if soc.type =='Facebook':
+                print('its facebook')
+                #url = facebook_create_post(soc.login,soc.password,test_publish,test)
+                job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
+                registry = ScheduledJobRegistry(queue=queue)
+                print(job)
+                print(job in registry)
+                print('Job id: %s' % job.id)
+
+                post.job_id = job
+                alr_posts = str(post.link_post)
+                #facebook_url = "facebook: " + url + " "
+                #post.link_post = alr_posts + facebook_url
+                #print(alr_posts + facebook_url)
+                print('success')
+                print(soc)
+                #print(url)
+            if soc.type =='Instagram':
+                alr_posts = str(post.link_post)
+                url = 'test'
+                instagram_url = "instagram: " + url + " "
+                post.link_post = alr_posts + instagram_url
+                print(alr_posts + instagram_url)
+                print('its instagram')
+            if soc.type =='Twitter':
+                url="test"
+                alr_posts = str(post.link_post)
+                twitter_url = "twitter: " + url + " "
+                post.link_post = alr_posts + twitter_url
+                print(alr_posts + twitter_url)
+                print('its twitter')
+        post.already_posted = True
+        flash('Your post will publish now!', 'success')
+    else:
+        post.already_posted = False
+        flash('Your post not publish now, please choose your social!', 'danger')
+
+    job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
+    registry = ScheduledJobRegistry(queue=queue)
+    print(job in registry)
+    print('Job id: %s' % job.id)
+
     db.session.commit()
-    flash('Your post will publish now!', 'success')
+
+
+    flash('Your post will add to queue!', 'success')
     return redirect(url_for('home'))
 
 
@@ -609,7 +722,7 @@ def delete_notes(post_id):
 def home_admin():
     return render_template('index.html')
 
-
+"""
 #@app.route('/loginn')
 #def loginn():
 #    auth = request.authorization
@@ -779,3 +892,4 @@ def delete_post(id):
 #fields = ['id, name','posts']
 #profile = fb.get_object('105020864533772',fields=fields)
 #print(json.dumps(profile,indent=4))
+"""
