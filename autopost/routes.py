@@ -414,6 +414,15 @@ def publish_task(post_id):
     else:
         test = None
 
+    test_datetime = post.date_posted
+    take_day,take_time = str(test_datetime).split(' ')
+    year,month,day = take_day.split('-')
+    hour_ser,minute,seconds = take_time.split(':')
+    hour = int(hour_ser) - 3
+    if hour<0:
+        hour=24+hour
+
+
     tmp = 0
     for soc in post.socials:
         tmp = tmp+1
@@ -427,7 +436,7 @@ def publish_task(post_id):
                 post.job_id = str(job)
                 print(job)
                 time.sleep(2)
-                job2 = q_low.enqueue(get_res,job,post)
+                job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 result_job = job.result
                 print("result job")
                 print(result_job)
@@ -504,7 +513,7 @@ def add_to_queue_task(post_id):
                 print(job in registry)
                 print('Job id: %s' % job.id)
                 time.sleep(2)
-                job2 = q_low.enqueue(get_res,job,post)
+                job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 result_job = job.result
                 print("result job")
                 print(result_job)
