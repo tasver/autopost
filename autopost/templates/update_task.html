@@ -116,7 +116,10 @@
                 <div class="test_inl">
                     <button type="submit" class="btn btn-outline-primary">SUBMIT</button>
                     <a href="{{ url_for('delete_task', post_id = post.id) }}" role="button" class="btn btn-outline-danger ">Delete</a>
+                    <a href="{{ url_for('publish_task',post_id = post.id) }}" role="button" class="btn btn-outline-success ">Publish now</a>
+                    <a href="{{ url_for('home') }}" role="button" class="btn btn-outline-success ">Add to queue</a>
                     <a href="{{ url_for('home') }}" role="button" class="btn btn-outline-secondary ">EXIT</a>
+
                 </div>
             </div>
         </form>

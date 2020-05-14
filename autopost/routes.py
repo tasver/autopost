@@ -130,7 +130,7 @@ def add_social():
     if form.validate_on_submit():
         #type2 = dict(form.type.choices).get(form.type.data)
         #hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        social = Social(login=form.login.data, password=bcrypt.generate_password_hash(form.password.data).decode('utf-8')\
+        social = Social(login=form.login.data, password=form.password.data\
                         ,owner=current_user,type=dict(form.type.choices).get(form.type.data))
         db.session.add(social)
         db.session.commit()
@@ -261,12 +261,15 @@ def update_task(post_id):
         soc = form.socials.data
         for elem in soc:
             test_int = int(str(elem))
+            elem_soc = Social.query.get(test_int)
             print(test_int)
             if test_int != 0:
-                post.socials.append(Social.query.get(test_int))
+                post.socials.append(elem_soc)
                 print('maybe success')
                 db.session.commit()
             elif test_int ==0:
+                post.socials.remove(elem_soc)
+                db.session.commit()
                 print("valu = 0")
             else:
                 #flash('Your can not choose nothing', 'danger')
@@ -322,12 +325,7 @@ def socials():
         user = User.query.filter_by(username=username).first_or_404()
         page = request.args.get('page', 1, type=int)
         socials = Social.query.filter_by(user_id=user.id).order_by(Social.id.desc()).paginate(page, 5, False)
-
-
-
         return render_template('socials.html', user=user, socials=socials)
-
-
     else:
         return redirect(url_for('home'))
 
@@ -338,9 +336,9 @@ def update_social(social_id):
     social = Social.query.get_or_404(social_id)
     form = UpdateSocial()
     if request.method == 'POST' and form.validate_on_submit():
-        if bcrypt.check_password_hash(social.password, form.passwordcheck.data):
-            hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
-            social.password = hashed_password
+        if social.password == form.passwordcheck.data:
+            #hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+            social.password = form.new_password.data
             social.login = form.login.data
             db.session.commit()
             flash('Success. You change your social account', 'success')
@@ -360,16 +358,11 @@ def delete_social(social_id):
         abort(403)
     #postsss = Post.query.all()
     #for post in postsss:
-
     #def remove_tag(tag_id):
     #tag = Tag.query.get(tag_id)
-
-
     #for post in social.posts:
     #    p = Post.query.get(post.id)
     #    p.socials.remove(social)
-
-
         #post.socials.remove(social)
         #social.posts.remove()
 
@@ -377,6 +370,54 @@ def delete_social(social_id):
     db.session.commit()
     flash('Your social hes been deleted!', 'success')
     return redirect(url_for('socials'))
+
+@app.route("/post/<int:post_id>/publish", methods=['GET', 'POST'])
+@login_required
+def publish_task(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+
+    test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
+    test = None
+    if post.image_file!=None and post.image_file!="no file":
+        #key = post.image_file
+        test = post.image_file
+        print(test)
+    else:
+        test = None
+    #test_datetime = post.date_posted
+    #take_day,take_time = str(test_datetime).split(' ')
+    #year,month,day = take_day.split('-')
+    #hour_ser,minute,seconds = take_time.split(':')
+    #hour = int(hour_ser) - 3
+    #if hour<0:
+    #    hour=24+hour
+    for soc in post.socials:
+        url = facebook_create_post(soc.login,soc.password,test_publish,test)
+        print('success')
+        print(soc)
+        print(url)
+
+
+    #job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
+    #registry = ScheduledJobRegistry(queue=queue)
+    #print(job in registry)
+    #print('Job id: %s' % job.id)
+
+    db.session.commit()
+    flash('Your post will publish now!', 'success')
+    return redirect(url_for('home'))
+
+@app.route("/post/<int:post_id>/addqueue", methods=['GET', 'POST'])
+@login_required
+def add_to_queue_task(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.commit()
+    flash('Your post will publish now!', 'success')
+    return redirect(url_for('home'))
 
 
 """

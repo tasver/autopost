@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return self.username
 
-    def __init__(self, username, email, password, admin=False):
+    def __init__(self, username, email, password, admin=True):
         self.username = username
         self.email = email
         self.password = password
@@ -45,8 +45,8 @@ class Project(db.Model):
 
 
 association_table = db.Table('association_table', db.Model.metadata,
-    db.Column('Socials_id', db.Integer, db.ForeignKey('socials.id')),
-    db.Column('Post_id', db.Integer, db.ForeignKey('posts.id')),
+    db.Column('Socials_id', db.Integer, db.ForeignKey('socials.id',ondelete="CASCADE"),primary_key=True),
+    db.Column('Post_id', db.Integer, db.ForeignKey('posts.id',ondelete="CASCADE"),primary_key=True),
     db.UniqueConstraint('Socials_id', 'Post_id', name='UC_social_id_post_id')
 )
 
