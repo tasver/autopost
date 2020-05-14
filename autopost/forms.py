@@ -64,8 +64,8 @@ class UpdateAccountForm(FlaskForm):
 class AddTask(FlaskForm):
     title = StringField('Title', validators=[DataRequired()],render_kw={"placeholder": "It is your content title"})
     content = TextAreaField('Content', validators=[DataRequired()],render_kw={"placeholder": "This is your main content"})
-    date_posted = DateField('Date Posted', format='%Y-%m-%d',render_kw={"placeholder": "Format date example: 2020-06-01"})
-    time_posted = DateTimeField('Time Posted',format='%H:%M',render_kw={"placeholder": "Format Time example: 20:30"})
+    date_posted = DateField('Date Posted', format='%Y-%m-%d',validators=[Optional()],render_kw={"placeholder": "Format date example: 2020-06-01"})
+    time_posted = DateTimeField('Time Posted',format='%H:%M',validators=[Optional()],render_kw={"placeholder": "Format Time example: 20:30"})
     image_file = FileField('Choose picture', validators=[FileAllowed(['jpg','png','mp4'])])
     image_file_url = StringField('Your picture now: ' )
     tags = TextAreaField('Tags',render_kw={"placeholder": "Write here your tags. Format:  #something #test "})
