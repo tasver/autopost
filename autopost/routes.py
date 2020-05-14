@@ -417,8 +417,11 @@ def publish_task(post_id):
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
                 job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
-                post.job_id = job
+                post.job_id = str(job)
                 print(job)
+                result_job = job.result
+                print("result job")
+                print(result_job)
                 #alr_posts = str(post.link_post)
                 #facebook_url = "facebook: " + url + " "
                 #post.link_post = alr_posts + facebook_url
@@ -492,9 +495,11 @@ def add_to_queue_task(post_id):
                 print(job)
                 print(job in registry)
                 print('Job id: %s' % job.id)
-
-                post.job_id = job
-                alr_posts = str(post.link_post)
+                result_job = job.result
+                print("result job")
+                print(result_job)
+                post.job_id = str(job)
+                #alr_posts = str(post.link_post)
                 #facebook_url = "facebook: " + url + " "
                 #post.link_post = alr_posts + facebook_url
                 #print(alr_posts + facebook_url)
@@ -521,10 +526,7 @@ def add_to_queue_task(post_id):
         post.already_posted = False
         flash('Your post not publish now, please choose your social!', 'danger')
 
-    job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
-    registry = ScheduledJobRegistry(queue=queue)
-    print(job in registry)
-    print('Job id: %s' % job.id)
+
 
     db.session.commit()
 
