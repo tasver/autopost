@@ -502,7 +502,7 @@ def add_to_queue_task(post_id):
                 registry = ScheduledJobRegistry(queue=queue)
                 print(job in registry)
                 print('Job id: %s' % job.id)
-                job2 = queue.enqueue_in(timedelta(seconds=3), get_res(job,post))
+                job2 = queue.enqueue_in(timedelta(seconds=3), get_res,job,post)
                 result_job = job.result
                 print("result job")
                 print(result_job)
