@@ -35,10 +35,21 @@ def home():
         username = current_user.username
         user = User.query.filter_by(username=username).first_or_404()
         page = request.args.get('page', 1, type=int)
-        posts = Post.query.filter_by(user_id=user.id).order_by(Post.date_posted.desc()).paginate(page, 10, False)
+        posts = Post.query.filter_by(user_id=user.id).filter_by(notes=False).order_by(Post.date_posted.desc()).paginate(page, 10, False)
         return render_template('home.html', user=user, posts=posts)
     else:
         return render_template('home_dev.html')
+
+@app.route("/notes")
+def notes():
+    if current_user.is_authenticated:
+        username = current_user.username
+        user = User.query.filter_by(username=username).first_or_404()
+        page = request.args.get('page', 1, type=int)
+        posts = Post.query.filter_by(user_id=user.id).filter_by(notes=True).order_by(Post.date_posted.desc()).paginate(page, 10, False)
+        return render_template('notes.html', user=user, posts=posts)
+    else:
+        return redirect(url_for('home'))
 
 
 @app.route("/about")
@@ -69,19 +80,43 @@ def add_task():
         else:
             file_path_3 = "no file"
         date_posted2 = None
-        if form.date_posted.data:
+
+        post = Post(title = form.title.data, content = form.content.data, \
+                    author= current_user, date_posted = date_posted2, \
+                    image_file = file_path_3, tags = form.tags.data, \
+                    already_posted=False,notes= form.notes.data
+                    )
+
+        if form.date_posted.data and form.time_posted.data:
             date_test = str(form.date_posted.data)
             time_test = str(form.time_posted.data)
             time_te = time_test[11:]
             year,month,day = date_test.split('-')
             hour_ser,minute,seconds = time_te.split(':')
             date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted=date_posted2
 
-        post = Post(title = form.title.data, content = form.content.data, \
-                    author= current_user, date_posted = date_posted2, \
-                    image_file = file_path_3, tags = form.tags.data, \
-                    already_posted=False
-                    )
+        if form.date_posted.data:
+            date_test = str(form.date_posted.data)
+            year,month,day = date_test.split('-')
+            hour_ser = 0
+            minute = 0
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted=date_posted2
+
+        if form.time_posted.data:
+            time_test = str(form.time_posted.data)
+            time_te = time_test[11:]
+            hour_ser,minute,seconds = time_te.split(':')
+            year = 2020
+            month = 1
+            day = 1
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted=date_posted2
+        if not form.time_posted.data or not form.date_posted.data:
+            post.notes=True
+
+
         db.session.add(post)
         db.session.commit()
         test_publish = post.title + '\n\n'+ post.content + '\n\n'+post.tags
@@ -322,7 +357,159 @@ def update_task(post_id):
 
     return render_template('update_task.html', title='Update Task' , form  = form, legend = 'Update Task',post = post)
 
-@app.route("/post/<int:post_id>/delete", methods=['GET', 'POST'])
+@app.route("/note/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_note(post_id):
+
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    user = current_user
+    need_socials = Social.query.filter_by(user_id = user.id).all()
+    socials_list = [(i.id, i.login +"|"+ i.type ) for i in need_socials]
+    form = AddTask(obj=user)
+    choo_noth = [(0,None)] + socials_list
+    form.socials.choices = choo_noth
+
+    if request.method == 'POST' and form.validate_on_submit():
+
+        sommm = post.socials
+        for elem in sommm:
+            print(elem)
+            post.socials.remove(elem)
+            elem.posts.remove(post)
+        db.session.commit()
+
+        file_path = post.image_file
+
+        if form.image_file.data:
+            file = request.files['image_file']
+            nameee = request.files['image_file'].filename
+            extensions = Path(nameee).suffixes
+            ext = "".join(extensions)
+            random_hex = str(secrets.token_hex(10))
+            usern = str(current_user.username)
+            name_file = usern + "/"+ random_hex + ext
+
+            my_bucket = get_bucket()
+            my_bucket.Object(name_file).put(ACL='public-read', Body=file,ContentType ='image/png')
+
+            file_path_3 = 'https://dyploma-autopost2.s3-us-west-2.amazonaws.com/' + name_file
+            post.image_file = file_path_3
+        else:
+            file_path_3 = file_path
+            post.image_file = file_path_3
+
+        if form.date_posted.data and form.time_posted.data:
+            date_test = str(form.date_posted.data)
+            time_test = str(form.time_posted.data)
+            time_te = time_test[11:]
+            year,month,day = date_test.split('-')
+            hour_ser,minute,seconds = time_te.split(':')
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted = date_posted2
+        if form.date_posted.data:
+            date_test = str(form.date_posted.data)
+            year,month,day = date_test.split('-')
+            hour_ser = 0
+            minute = 0
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted = date_posted2
+        if form.time_posted.data:
+            time_test = str(form.time_posted.data)
+            time_te = time_test[11:]
+            hour_ser,minute,seconds = time_te.split(':')
+            year = 2020
+            month = 1
+            day = 1
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted = date_posted2
+
+        if form.title.data:
+            post.title = form.title.data
+        if form.content.data:
+            post.content = form.content.data
+        if form.tags.data:
+            post.tags = form.tags.data
+
+        soc = form.socials.data
+
+        for elem in soc:
+            test_int = int(str(elem))
+            elem_soc = Social.query.get(test_int)
+            print(elem_soc)
+            print(test_int)
+            if test_int != 0:
+                post.socials.append(elem_soc)
+                print('maybe success')
+                db.session.commit()
+            elif test_int ==0:
+                sommm = post.socials
+                for elem in sommm:
+                    print(elem)
+                    post.socials.remove(elem)
+                    elem.posts.remove(post)
+                #elem_soc.posts.remove(post)
+                #post.socials.remove(elem_soc)
+                #elem_soc.posts.remove(post)
+                db.session.commit()
+                print("valu = 0")
+            else:
+                #flash('Your can not choose nothing', 'danger')
+                print("not value")
+
+        db.session.commit()
+        flash('Your note hes been updated!', 'success')
+        return redirect(url_for('notes'))
+
+    elif request.method == 'GET':
+        test_default = []
+        teeeeest_post = Post.query.filter_by(id = post.id).all()
+        print(teeeeest_post)
+        #len_soc = len(post.socials)
+        #if len_soc>0:
+            #print(post.socials)
+        for elem in post.socials:
+            tmp_default = str(elem.id)
+            test_default.append(tmp_default)
+        print(test_default)
+        if len(test_default)>0:
+            form.socials.default = test_default
+            form.process()
+
+        form.title.data = post.title
+        form.content.data = post.content
+        form.date_posted.data = post.date_posted
+        form.time_posted.data = post.date_posted
+        form.image_file.data = post.image_file
+        form.tags.data = post.tags
+        form.image_file_url.data = post.image_file
+
+
+    return render_template('update_note.html', title='Update Task' , form  = form, legend = 'Update Task',post = post)
+
+@app.route("/note/<int:post_id>/add_to_task", methods=['GET', 'POST'])
+@login_required
+def add_to_task(post_id):
+    if current_user.is_authenticated:
+        post = Post.query.get_or_404(post_id)
+        if post.author != current_user:
+            abort(403)
+
+
+        if post.date_posted:
+            post.notes = False
+            db.session.commit()
+            flash('You add a new task from note!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('You did no choose datetime!', 'danger')
+            return redirect(url_for('notes'))
+    else:
+        pass
+    return redirect(url_for('notes'))
+
+@app.route("/task/<int:post_id>/delete", methods=['GET', 'POST'])
 @login_required
 def delete_task(post_id):
     post = Post.query.get_or_404(post_id)
@@ -332,6 +519,17 @@ def delete_task(post_id):
     db.session.commit()
     flash('Your post hes been deleted!', 'success')
     return redirect(url_for('home'))
+
+@app.route("/note/<int:post_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_note(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your note hes been deleted!', 'success')
+    return redirect(url_for('notes'))
 
 
 @app.route("/socials")
@@ -421,14 +619,14 @@ def publish_task(post_id):
             if soc.type =='Facebook':
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
-                job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
-                post.job_id = str(job)
-                print(job)
-                time.sleep(2)
-                #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
-                result_job = job.result
-                print("result job")
-                print(result_job)
+                #job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
+                #post.job_id = str(job)
+                #print(job)
+                #time.sleep(2)
+                    #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
+                #result_job = job.result
+                #print("result job")
+                #print(result_job)
                 #alr_posts = str(post.link_post)
                 #facebook_url = "facebook: " + url + " "
                 #post.link_post = alr_posts + facebook_url
@@ -497,16 +695,16 @@ def add_to_queue_task(post_id):
             if soc.type =='Facebook':
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
-                job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
-                registry = ScheduledJobRegistry(queue=queue)
-                print(job in registry)
-                print('Job id: %s' % job.id)
-                time.sleep(2)
-                #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
-                result_job = job.result
-                print("result job")
-                print(result_job)
-                post.job_id = str(job)
+                #job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
+                #registry = ScheduledJobRegistry(queue=queue)
+                #print(job in registry)
+                #print('Job id: %s' % job.id)
+                #time.sleep(2)
+                    #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
+                #result_job = job.result
+                #print("result job")
+                #print(result_job)
+                #post.job_id = str(job)
                 #alr_posts = str(post.link_post)
                 #facebook_url = "facebook: " + url + " "
                 #post.link_post = alr_posts + facebook_url

@@ -94,13 +94,14 @@
 
 
 
-        <form class="upload-form" action="{{ url_for('update_notes', post_id = post.id) }}" method="POST" enctype="multipart/form-data">
+        <form class="upload-form" action="{{ url_for('update_note', post_id = post.id) }}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
 
                 <p><input type="file" name="image_file"></p>
                 <div class="test_inl">
                     <button type="submit" class="btn btn-outline-primary">SUBMIT</button>
-                    <a href="{{ url_for('delete_notes', post_id = post.id) }}" role="button" class="btn btn-outline-danger ">Delete</a>
+                    <a href="{{ url_for('add_to_task', post_id = post.id) }}" role="button" class="btn btn-outline-success ">Add to task</a>
+                    <a href="{{ url_for('delete_note', post_id = post.id) }}" role="button" class="btn btn-outline-danger ">Delete</a>
                     <a href="{{ url_for('notes') }}" role="button" class="btn btn-outline-secondary ">EXIT</a>
                 </div>
             </div>

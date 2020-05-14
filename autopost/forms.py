@@ -71,6 +71,7 @@ class AddTask(FlaskForm):
     tags = TextAreaField('Tags',render_kw={"placeholder": "Write here your tags. Format:  #something #test "})
     #my_choices = [('1', 'Choice1'), ('2', 'Choice2'), ('3', 'Choice3')]
     socials = SelectMultipleField('Socials', coerce=int,validators=[Optional()])
+    notes = BooleanField('It is notes')
     submit = SubmitField('Add task')
 
 """
