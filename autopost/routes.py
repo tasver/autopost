@@ -214,7 +214,14 @@ def admin_login_required(func):
     return decorated_view
 
 
-
+def get_res(job, post):
+    time.sleep(120)
+    result_job = job.result
+    tessstid = post.job_id
+    post.job_id = str(tessstid) +  str(job.id)
+    lennnnk = post.link_post
+    post.link_post = str(lennnnk) + str(result_job)
+    #return str(result_job)
 
 @app.route("/task/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -419,6 +426,7 @@ def publish_task(post_id):
                 job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
                 post.job_id = str(job)
                 print(job)
+                job2 = queue.enqueue_in(timedelta(seconds=30), get_res(job,post))
                 result_job = job.result
                 print("result job")
                 print(result_job)
@@ -492,9 +500,9 @@ def add_to_queue_task(post_id):
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
                 job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
                 registry = ScheduledJobRegistry(queue=queue)
-                print(job)
                 print(job in registry)
                 print('Job id: %s' % job.id)
+                job2 = queue.enqueue_in(timedelta(seconds=30), get_res(job,post))
                 result_job = job.result
                 print("result job")
                 print(result_job)
@@ -525,12 +533,7 @@ def add_to_queue_task(post_id):
     else:
         post.already_posted = False
         flash('Your post not publish now, please choose your social!', 'danger')
-
-
-
     db.session.commit()
-
-
     flash('Your post will add to queue!', 'success')
     return redirect(url_for('home'))
 

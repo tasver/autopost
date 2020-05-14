@@ -59,8 +59,8 @@ class Post(db.Model):
     tags = db.Column(db.Text)
     already_posted = db.Column(db.Boolean())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-    job_id = db.Column(db.String(200))
-    link_post = db.Column(db.String(1000))
+    job_id = db.Column(db.Text)
+    link_post = db.Column(db.Text)
     notes = db.Column(db.Boolean())
 
     __tablename__ = 'posts'
