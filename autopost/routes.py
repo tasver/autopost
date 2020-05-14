@@ -68,12 +68,14 @@ def add_task():
 
         else:
             file_path_3 = "no file"
-        date_test = str(form.date_posted.data)
-        time_test = str(form.time_posted.data)
-        time_te = time_test[11:]
-        year,month,day = date_test.split('-')
-        hour_ser,minute,seconds = time_te.split(':')
-        date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+        date_posted2 = None
+        if form.date_posted.data:
+            date_test = str(form.date_posted.data)
+            time_test = str(form.time_posted.data)
+            time_te = time_test[11:]
+            year,month,day = date_test.split('-')
+            hour_ser,minute,seconds = time_te.split(':')
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
 
         post = Post(title = form.title.data, content = form.content.data, \
                     author= current_user, date_posted = date_posted2, \
@@ -90,19 +92,6 @@ def add_task():
             print(test)
         else:
             test = None
-        test_datetime = post.date_posted
-        take_day,take_time = str(test_datetime).split(' ')
-        year,month,day = date_test.split('-')
-        hour_ser,minute,seconds = take_time.split(':')
-        hour = int(hour_ser) - 3
-        if hour<0:
-            hour=24+hour
-
-
-        #job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,facebook_login,facebook_password,test_publish,test)
-        #registry = ScheduledJobRegistry(queue=queue)
-        #print(job in registry)
-        #print('Job id: %s' % job.id)
         flash('Your task has been created!', 'success')
         return redirect(url_for('home'))
     return render_template('create_task.html', title='New Task', form = form, legend = 'New task')
