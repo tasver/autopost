@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+        <article class="media content-section article-metadata">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 15% " scope="col"> Date posted </th>
+                        <th style="width: 15% " scope="col"> login </th>
+                        <th style="width: 10% " scope="col"> type </th>
+                        <th style="width: 40% " scope="col"> link_post</th>
+                        <th style="width: 20% " scope="col"> Change </th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for social in post.socials %}
+
+                        <tr>
+                            <td  scope="row"><small>{{ post.date_posted }}</small></td>
+                            <td >{{ social.login }}</td>
+                            <td >{{ social.type }}</td>
+                            <td >{{ test_url_list[loop.index-1] }}
+                            </td>
+                            <td class="test_inl ">
+                                <a href="{{ url_for('delete_post_on_social', post_id = post.id, url_count = (loop.index-1) ) }}" role="button" class="btn btn-outline-danger btn-sm ">Delete</a>
+                                <a href="{{ test_url_list[loop.index-1] }}" role="button" class="btn btn-outline-info btn-sm ">Show</a>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </article>
+
+
+
+{% endblock content %}

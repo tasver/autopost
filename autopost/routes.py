@@ -735,6 +735,89 @@ def add_to_queue_task(post_id):
     flash('Your post will add to queue!', 'success')
     return redirect(url_for('home'))
 
+@app.route("/post/<int:post_id>/go_to_post")
+def go_to_post(post_id):
+    if current_user.is_authenticated:
+
+        post = Post.query.get_or_404(post_id)
+        if post.author != current_user:
+            abort(403)
+        tmp = 0
+        for soc in post.socials:
+            print(soc)
+            tmp = tmp+1
+        #print(post.socials)
+        #posts = posts2.paginate(page, 10, False)
+        url = post.link_post
+        url_len = len(str(url)) / tmp
+        print(str(url))
+        print(url_len)
+        url_len = int(url_len)
+        test_url = url[:url_len]
+        print(test_url)
+        test_url_list = []
+        n = 0
+        while tmp>0:
+            try:
+                test_url = url[n:url_len]
+                test_url_list.append(test_url)
+                n = n+url_len
+                url_len = url_len+url_len
+                tmp=tmp-1
+            except:
+                print("no one links")
+        print(test_url_list)
+        #posts = Post.query.filter_by(user_id=user.id).filter_by(notes=False).order_by(Post.date_posted.desc()).paginate(page, 10, False)
+        return render_template('go_to_post.html', post=post,test_url_list=test_url_list)
+    else:
+        return redirect(url_for('home'))
+
+@app.route("/post/<int:post_id>/<int:url_count>/delete_post_on_social")
+def delete_post_on_social(post_id,url_count):
+    if current_user.is_authenticated:
+        post = Post.query.get_or_404(post_id)
+        if post.author != current_user:
+            abort(403)
+        tmp = 0
+        for soc in post.socials:
+            print(soc)
+            if tmp == url_count:
+                social_log = soc.login
+
+                social_pas = soc.password
+            tmp = tmp+1
+        url = post.link_post
+        url_len = len(str(url)) / tmp
+        url_len = int(url_len)
+        test_url = url[:url_len]
+        test_url_list = []
+        n = 0
+        while tmp>0:
+            try:
+                test_url = url[n:url_len]
+                test_url_list.append(test_url)
+                n = n+url_len
+                url_len = url_len+url_len
+                tmp=tmp-1
+            except:
+                print("no one links")
+        print(test_url_list)
+        need_url = test_url_list[url_count]
+        print(need_url)
+
+        facebook_delete_post(social_log,social_pas,need_url)
+        test_url_list.remove(need_url)
+
+        str1 = ""
+        for ele in test_url_list:
+            str1 += ele
+        print("str1:")
+        print(str1)
+        post.link_post = str1
+        db.session.commit()
+
+        return redirect(url_for('home'))
+    return redirect(url_for('home'))
 
 """
 @app.route("/projects")

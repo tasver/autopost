@@ -75,6 +75,21 @@
             </div>
 
             <div class="form-group">
+                {{ form.socials.label(class="form-control-label") }}
+                {% if form.socials.errors %}
+                    {{ form.socials(class="form-control form-control-sm is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.socials.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.socials(class="form-control form-control-sm") }}
+                {% endif %}
+            </div>
+
+
+            <div class="form-group">
                 {{ form.image_file_url.label(class="form-control-label") }}
                 {% if form.image_file_url.errors %}
                     {{ form.image_file_url(class="form-control form-control-sm is-invalid") }}
@@ -88,19 +103,7 @@
                 {% endif %}
             </div>
 
-            <div class="form-group">
-                {{ form.socials.label(class="form-control-label") }}
-                {% if form.socials.errors %}
-                    {{ form.socials(class="form-control form-control-sm is-invalid") }}
-                    <div class="invalid-feedback">
-                        {% for error in form.socials.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.socials(class="form-control form-control-sm") }}
-                {% endif %}
-            </div>
+
 
 
 
@@ -116,9 +119,13 @@
                 <div class="test_inl">
                     <button type="submit" class="btn btn-outline-primary">SUBMIT</button>
                     <a href="{{ url_for('delete_task', post_id = post.id) }}" role="button" class="btn btn-outline-danger ">Delete</a>
-                    <a href="{{ url_for('publish_task',post_id = post.id) }}" role="button" class="btn btn-outline-success ">Publish now</a>
-                    <a href="{{ url_for('add_to_queue_task',post_id = post.id) }}" role="button" class="btn btn-outline-success ">Add to queue</a>
-                    <a href="{{ url_for('home') }}" role="button" class="btn btn-outline-secondary ">EXIT</a>
+
+                        <a href="{{ url_for('publish_task',post_id = post.id) }}" role="button" class="btn btn-outline-success ">Publish now</a>
+                        <a href="{{ url_for('add_to_queue_task',post_id = post.id) }}" role="button" class="btn btn-outline-success ">Add to queue</a>
+                        <a href="{{ url_for('home') }}" role="button" class="btn btn-outline-secondary ">EXIT</a>
+
+                        <a href="{{ url_for('go_to_post', post_id = post.id) }}" role="button" class="btn btn-outline-danger ">Go to post</a>
+                        <a href="{{ url_for('home') }}" role="button" class="btn btn-outline-secondary ">EXIT</a>
 
                 </div>
             </div>

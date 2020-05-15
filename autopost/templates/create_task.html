@@ -76,7 +76,7 @@
                     {{ form.tags(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-
+            <div class="test_inl">
              <div class="form-group " >
                 {{ form.notes.label(class="form-control-label") }}
                     {% if form.notes.errors %}
@@ -90,13 +90,14 @@
                     {{ form.notes(class="form-control form-control-sm") }}
                 {% endif %}
             </div>
-
+            <p><input type="file" name="image_file"></p>
+            </div>
         </fieldset>
         <form class="upload-form" action="{{ url_for('add_task') }}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
 
 
-                <p><input type="file" name="image_file"></p>
+
                 <button type="submit" class="btn btn-primary">SUBMIT</button>
 
             </div>

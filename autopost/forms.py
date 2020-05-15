@@ -74,6 +74,8 @@ class AddTask(FlaskForm):
     notes = BooleanField('It is notes')
     submit = SubmitField('Add task')
 
+#class GoToPost(FlaskForm):
+
 """
 class NotesTask(FlaskForm):
     title = StringField('Title', validators=[Optional(),],render_kw={"placeholder": "It is your content title"})
