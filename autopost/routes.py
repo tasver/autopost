@@ -649,7 +649,7 @@ def publish_task(post_id):
                 print(alr_posts + twitter_url)
                 print('its twitter')
         post.already_posted = True
-        flash('Your post will publish now!', 'success')
+        flash('Your post will be publish now!', 'success')
     else:
         post.already_posted = False
         flash('Your post not publish now, please choose your social!', 'danger')
@@ -728,7 +728,6 @@ def add_to_queue_task(post_id):
                 print(alr_posts + twitter_url)
                 print('its twitter')
         post.already_posted = True
-        flash('Your post will publish now!', 'success')
     else:
         post.already_posted = False
         flash('Your post not publish now, please choose your social!', 'danger')
