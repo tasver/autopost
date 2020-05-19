@@ -200,7 +200,7 @@ def get_mobile_post(driver,n):
 
 def get_mobile_post_url(driver,url):
     url2 = url[12:]
-    mobile_url = 'https://.m.' + url2
+    mobile_url = 'https://.m' + url2
     driver.get(mobile_url)
     time.sleep(3)
     return str(mobile_url)
