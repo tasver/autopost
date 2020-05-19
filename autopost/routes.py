@@ -809,8 +809,7 @@ def delete_post_on_social(post_id,url_count):
         print(test_url_list)
         need_url = test_url_list[url_count]
         print(need_url)
-
-        facebook_delete_post(social_log,social_pas,need_url)
+        job = queue.enqueue(facebook_delete_post,social_log,social_pas,need_url)
         test_url_list.remove(need_url)
 
         str1 = ""
