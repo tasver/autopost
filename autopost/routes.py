@@ -328,7 +328,7 @@ def update_task(post_id):
 
 
         db.session.commit()
-        flash('Your task hes been updated!', 'success')
+        flash('Your task has been updated!', 'success')
         return redirect(url_for('home'))
 
     elif request.method == 'GET':
@@ -459,7 +459,7 @@ def update_note(post_id):
                 print("not value")
 
         db.session.commit()
-        flash('Your note hes been updated!', 'success')
+        flash('Your note has been updated!', 'success')
         return redirect(url_for('notes'))
 
     elif request.method == 'GET':
@@ -517,7 +517,7 @@ def delete_task(post_id):
         abort(403)
     db.session.delete(post)
     db.session.commit()
-    flash('Your post hes been deleted!', 'success')
+    flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
 
 @app.route("/note/<int:post_id>/delete", methods=['GET', 'POST'])
@@ -528,7 +528,7 @@ def delete_note(post_id):
         abort(403)
     db.session.delete(post)
     db.session.commit()
-    flash('Your note hes been deleted!', 'success')
+    flash('Your note has been deleted!', 'success')
     return redirect(url_for('notes'))
 
 
@@ -582,7 +582,7 @@ def delete_social(social_id):
 
     db.session.delete(social)
     db.session.commit()
-    flash('Your social hes been deleted!', 'success')
+    flash('Your social has been deleted!', 'success')
     return redirect(url_for('socials'))
 
 @app.route("/post/<int:post_id>/publish", methods=['GET', 'POST'])
@@ -621,7 +621,7 @@ def publish_task(post_id):
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
                 job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
                 post.job_id = str(job)
-                print(job)
+                #print(job)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 #result_job = job.result
@@ -698,7 +698,7 @@ def add_to_queue_task(post_id):
                 job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
                 registry = ScheduledJobRegistry(queue=queue)
                 print(job in registry)
-                print('Job id: %s' % job.id)
+                #print('Job id: %s' % job.id)
                 post.job_id = str(job)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
