@@ -224,9 +224,11 @@ def get_all_posts(driver):
 def delete_post(driver,url):
     test = get_mobile_post_url(driver,url)
     driver.get(test)
+    print(test)
     time.sleep(3.5)
     print("get mobile irl success")
     driver.find_element_by_xpath('//a[@aria-haspopup="true"]').click()
+    print("find popup")
     time.sleep(3.5)
     WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.XPATH, '//a[@data-sigil="touchable touchable removeStoryButton enabled_action"]'))).click()
     time.sleep(3)
