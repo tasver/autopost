@@ -619,9 +619,9 @@ def publish_task(post_id):
             if soc.type =='Facebook':
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
-                #job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
-                #post.job_id = str(job)
-                #print(job)
+                job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
+                post.job_id = str(job)
+                print(job)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 #result_job = job.result
@@ -695,10 +695,11 @@ def add_to_queue_task(post_id):
             if soc.type =='Facebook':
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
-                #job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
-                #registry = ScheduledJobRegistry(queue=queue)
-                #print(job in registry)
-                #print('Job id: %s' % job.id)
+                job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
+                registry = ScheduledJobRegistry(queue=queue)
+                print(job in registry)
+                print('Job id: %s' % job.id)
+                post.job_id = str(job)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 #result_job = job.result
@@ -783,7 +784,7 @@ def delete_post_on_social(post_id,url_count):
             print(soc)
             if tmp == url_count:
                 social_log = soc.login
-
+                soc_del = soc
                 social_pas = soc.password
             tmp = tmp+1
         url = post.link_post
@@ -814,6 +815,7 @@ def delete_post_on_social(post_id,url_count):
         print("str1:")
         print(str1)
         post.link_post = str1
+        post.socials.remove(soc_del)
         db.session.commit()
 
         return redirect(url_for('home'))
