@@ -223,6 +223,7 @@ def get_all_posts(driver):
 
 def delete_post(driver,url):
     test = get_mobile_post_url(driver,url)
+    driver.get(test)
     time.sleep(3.5)
     print("get mobile irl success")
     driver.find_element_by_xpath('//a[@aria-haspopup="true"]').click()
