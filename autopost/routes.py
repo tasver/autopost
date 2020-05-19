@@ -87,14 +87,7 @@ def add_task():
                     already_posted=False,notes= form.notes.data
                     )
 
-        if form.date_posted.data and form.time_posted.data:
-            date_test = str(form.date_posted.data)
-            time_test = str(form.time_posted.data)
-            time_te = time_test[11:]
-            year,month,day = date_test.split('-')
-            hour_ser,minute,seconds = time_te.split(':')
-            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
-            post.date_posted=date_posted2
+
 
         if form.date_posted.data:
             date_test = str(form.date_posted.data)
@@ -113,6 +106,16 @@ def add_task():
             day = 1
             date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
             post.date_posted=date_posted2
+
+        if form.date_posted.data and form.time_posted.data:
+            date_test = str(form.date_posted.data)
+            time_test = str(form.time_posted.data)
+            time_te = time_test[11:]
+            year,month,day = date_test.split('-')
+            hour_ser,minute,seconds = time_te.split(':')
+            date_posted2 = datetime(int(year), int(month), int(day), int(hour_ser), int(minute))
+            post.date_posted=date_posted2
+
         if not form.time_posted.data or not form.date_posted.data:
             post.notes=True
 
@@ -782,9 +785,11 @@ def delete_post_on_social(post_id,url_count):
         for soc in post.socials:
             print(soc)
             if tmp == url_count:
-                social_log = soc.login
                 soc_del = soc
+                social_log = soc.login
+                print(social_log)
                 social_pas = soc.password
+                print(social_pas)
             tmp = tmp+1
         url = post.link_post
         url_len = len(str(url)) / tmp
@@ -816,6 +821,7 @@ def delete_post_on_social(post_id,url_count):
         post.link_post = str1
         post.socials.remove(soc_del)
         db.session.commit()
+        flash('Your post on facebook will be deleted', 'success')
 
         return redirect(url_for('home'))
     return redirect(url_for('home'))
