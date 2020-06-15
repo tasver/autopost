@@ -753,7 +753,8 @@ def go_to_post(post_id):
         #posts = posts2.paginate(page, 10, False)
         if post.job_id:
             teeeeeeest = post.link_post
-
+            if teeeeeeest == "None":
+                teeeeeeest = ""
 
             job = queue.fetch_job(post.job_id)
             #job = post.job_id
