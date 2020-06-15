@@ -751,10 +751,8 @@ def go_to_post(post_id):
             tmp = tmp+1
         #print(post.socials)
         #posts = posts2.paginate(page, 10, False)
-        if post.job_id:
+        if post.job_id!=None:
             teeeeeeest = post.link_post
-            if teeeeeeest == "None":
-                teeeeeeest = ""
 
             job = queue.fetch_job(post.job_id)
             #job = post.job_id
@@ -762,10 +760,11 @@ def go_to_post(post_id):
             link_post_test = job.result
             print(link_post_test)
 
-            teeeeeeest = str(teeeeeeest) + str(link_post_test)
-            print(teeeeeeest)
+            teeeeeeest2 = str(link_post_test)
+            print(teeeeeeest2)
 
-            post.link_post = teeeeeeest
+            post.link_post = teeeeeeest2
+            post.job_id = None
 
 
 
