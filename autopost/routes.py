@@ -623,7 +623,7 @@ def publish_task(post_id):
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
                 job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
-                post.job_id = str(job)
+                post.job_id = str(job.id)
                 #print(job)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
@@ -702,7 +702,7 @@ def add_to_queue_task(post_id):
                 registry = ScheduledJobRegistry(queue=queue)
                 print(job in registry)
                 #print('Job id: %s' % job.id)
-                post.job_id = str(job)
+                post.job_id = str(job.id)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 #result_job = job.result
