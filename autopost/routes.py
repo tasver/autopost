@@ -242,7 +242,7 @@ def admin_login_required(func):
 
 
 def get_res(job, post):
-    time.sleep(120)
+    #time.sleep(120)
     result_job = job.result
     tessstid = post.job_id
     post.job_id = str(tessstid) +  str(job.id)
@@ -622,7 +622,7 @@ def publish_task(post_id):
             if soc.type =='Facebook':
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
-                job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test )
+                job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test,result_ttl=-1)
                 post.job_id = str(job.id)
                 #print(job)
                 #time.sleep(2)
@@ -698,7 +698,7 @@ def add_to_queue_task(post_id):
             if soc.type =='Facebook':
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
-                job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test)
+                job = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)), facebook_create_post,soc.login,soc.password,test_publish,test,result_ttl=-1)
                 registry = ScheduledJobRegistry(queue=queue)
                 print(job in registry)
                 #print('Job id: %s' % job.id)
@@ -751,6 +751,23 @@ def go_to_post(post_id):
             tmp = tmp+1
         #print(post.socials)
         #posts = posts2.paginate(page, 10, False)
+        if post.job_id:
+            teeeeeeest = post.link_post
+
+
+            job = queue.fetch_job(post.job_id)
+            #job = post.job_id
+            print(job)
+            link_post_test = job.result
+            print(link_post_test)
+
+            teeeeeeest = str(teeeeeeest) + str(link_post_test)
+            print(teeeeeeest)
+
+            post.link_post = teeeeeeest
+
+
+
         url = post.link_post
         url_len = len(str(url)) / tmp
         print(str(url))
