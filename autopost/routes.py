@@ -868,7 +868,7 @@ def delete_post_on_social(post_id,url_count):
         while tmp>0:
             try:
                 test_url = url[n:url_len]
-                test_url_job = test_job[n:job_id_len]
+                test_url_job = test_job[m:job_id_len]
                 #test_url_list.append(test_url)
                 test_url_list = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url)
                 test_url_job_list.append(test_url_job)
