@@ -762,14 +762,6 @@ def go_to_post(post_id):
             print('test_job')
             print(test_job)
 
-
-
-
-            teeeeeeest2 = str(link_post_test)
-            print(teeeeeeest2)
-            post.link_post = teeeeeeest2
-
-
             job_id_len = len(str(test_job)) / tmp
             print(str(test_job))
             print(job_id_len)
