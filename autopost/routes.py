@@ -889,6 +889,7 @@ def delete_post_on_social(post_id,url_count):
         print(test_url_job_list)
         list_join = "".join(test_url_job_list)
         print(list_join)
+
         post.job_id = list_join
 
         str1 = ""
