@@ -749,6 +749,7 @@ def go_to_post(post_id):
         for soc in post.socials:
             print(soc)
             tmp = tmp+1
+        tmp2 = tmp
         #print(post.socials)
         #posts = posts2.paginate(page, 10, False)
         if tmp == 0:
@@ -801,7 +802,7 @@ def go_to_post(post_id):
 
 
         url = post.link_post
-        url_len = len(str(url)) / tmp
+        url_len = len(str(url)) / tmp2
         print(str(url))
         print(url_len)
         url_len = int(url_len)
@@ -809,13 +810,13 @@ def go_to_post(post_id):
         print(test_url)
         test_url_list = []
         n = 0
-        while tmp>0:
+        while tmp2>0:
             try:
                 test_url = url[n:url_len]
                 test_url_list.append(test_url)
                 n = n+url_len
                 url_len = url_len+url_len
-                tmp=tmp-1
+                tmp2=tmp2-1
             except:
                 print("no one links")
 
