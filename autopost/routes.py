@@ -894,7 +894,7 @@ def delete_post_on_social(post_id,url_count):
         test_url_list.remove(need_url)
         print(test_url_list)
         print(test_url_job_list)
-        test_url_job_list.remove(need_url)
+        test_url_job_list.remove(url_count)
         print(test_url_job_list)
         list_join = "".join(test_url_job_list)
         print(list_join)
