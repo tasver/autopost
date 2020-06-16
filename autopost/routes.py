@@ -765,6 +765,7 @@ def go_to_post(post_id):
 
             post.link_post = teeeeeeest2
             post.job_id = None
+            db.session.commit()
 
 
 
