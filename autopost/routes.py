@@ -759,7 +759,9 @@ def go_to_post(post_id):
 
         if post.job_id!=None:
             teeeeeeest = post.link_post
-
+            find_none = re.findall('None', teeeeeeest)
+            if find_none!=None:
+                teeeeeeest = teeeeeeest.replace('None','')
             test_job = post.job_id
             print('test_job')
             print(test_job)
