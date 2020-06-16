@@ -781,7 +781,7 @@ def go_to_post(post_id):
                     link_post_test = job.result
                     print(link_post_test)
 
-                    test_url_list = str(link_post_test_old) + str(link_post_test)
+                    test_url_list = str(link_post_test_old) + str(" ") + str(link_post_test)
 
                     print(test_url_list)
                     n = n+job_id_len
