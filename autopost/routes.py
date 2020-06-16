@@ -853,14 +853,29 @@ def delete_post_on_social(post_id,url_count):
         print(url_len)
         test_url = url[:url_len]
         test_url_list = []
+
+        test_job = post.job_id
+        print('test_job')
+        print(test_job)
+
+        job_id_len = len(str(test_job)) / tmp
+        print(str(test_job))
+        print(job_id_len)
+        job_id_len = int(job_id_len)
+        test_url_job_list = []
         n = 0
+        m=0
         while tmp>0:
             try:
                 test_url = url[n:url_len]
+                test_url_job = test_job[n:job_id_len]
                 #test_url_list.append(test_url)
                 test_url_list = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url)
+                test_url_job_list.append(test_url_job)
                 n = n+url_len
+                m=m+job_id_len
                 url_len = url_len+url_len
+                job_id_len = job_id_len+job_id_len
                 tmp=tmp-1
             except:
                 print("no one links")
@@ -869,6 +884,12 @@ def delete_post_on_social(post_id,url_count):
         print(need_url)
         job = queue.enqueue(facebook_delete_post,social_log,social_pas,need_url)
         test_url_list.remove(need_url)
+
+        test_url_job_list.remove(need_url)
+        print(test_url_job_list)
+        list_join = "".join(test_url_job_list)
+        print(list_join)
+        post.job_id = list_join
 
         str1 = ""
         for ele in test_url_list:
