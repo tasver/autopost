@@ -11,6 +11,7 @@ import errno
 from datetime import datetime
 import shutil
 from functools import wraps
+import re
 from flask_admin import BaseView, expose
 import uuid
 import boto3
@@ -813,7 +814,8 @@ def go_to_post(post_id):
         while tmp2>0:
             try:
                 test_url = url[n:url_len]
-                test_url_list.append(test_url)
+                #test_url_list.append(test_url)
+                test_url_list = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url)
                 n = n+url_len
                 url_len = url_len+url_len
                 tmp2=tmp2-1
