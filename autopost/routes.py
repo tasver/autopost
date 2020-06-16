@@ -809,8 +809,11 @@ def delete_post_on_social(post_id,url_count):
                 print(social_pas)
             tmp = tmp+1
         url = post.link_post
+        print(url)
         url_len = len(str(url)) / tmp
         url_len = int(url_len)
+        print('urllen')
+        print(url_len)
         test_url = url[:url_len]
         test_url_list = []
         n = 0
