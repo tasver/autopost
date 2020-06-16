@@ -773,7 +773,7 @@ def go_to_post(post_id):
             n = 0
             while tmp>0:
                 try:
-                    test_url = test_job[n:job_id_len_test]
+                    test_url = test_job[n:job_id_len]
                     job = queue.fetch_job(test_url)
                     print(job)
                     link_post_test = job.result
@@ -782,8 +782,8 @@ def go_to_post(post_id):
                     test_url_list = str(link_post_test_old) + str(link_post_test)
 
                     print(test_url_list)
-                    n = n+job_id_len_test
-                    job_id_len_test = job_id_len_test+job_id_len_test
+                    n = n+job_id_len
+                    job_id_len = job_id_len+job_id_len
                     tmp=tmp-1
                     link_post_test_old = test_url_list
                     print(test_url_list)
