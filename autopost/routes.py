@@ -624,7 +624,10 @@ def publish_task(post_id):
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
                 job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test,result_ttl=-1)
-                post.job_id = str(post.job_id) + str(job.id)
+                if post.job_id == None:
+                    post.job_id = str(job.id)
+                else:
+                    post.job_id = str(post.job_id) + str(job.id)
                 #print(job)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
@@ -703,7 +706,11 @@ def add_to_queue_task(post_id):
                 registry = ScheduledJobRegistry(queue=queue)
                 print(job in registry)
                 #print('Job id: %s' % job.id)
-                post.job_id = str(post.job_id) + str(job.id)
+                if post.job_id == None:
+                    post.job_id = str(job.id)
+                else:
+                    post.job_id = str(post.job_id) + str(job.id)
+
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 #result_job = job.result
@@ -759,9 +766,6 @@ def go_to_post(post_id):
 
         if post.job_id!=None:
             teeeeeeest = post.link_post
-            find_none = re.findall('None', teeeeeeest)
-            if find_none!=None:
-                teeeeeeest = teeeeeeest.replace('None','')
             test_job = post.job_id
             print('test_job')
             print(test_job)
