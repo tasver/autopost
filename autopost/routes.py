@@ -878,6 +878,8 @@ def delete_post_on_social(post_id,url_count):
                 #test_url_list.append(test_url)
                 test_url_list = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', url)
                 test_url_job_list.append(test_url_job)
+                print("test_url_job_list")
+                print(test_url_job_list)
                 n = n+url_len
                 m=m+job_id_len
                 url_len = url_len+url_len
@@ -890,7 +892,8 @@ def delete_post_on_social(post_id,url_count):
         print(need_url)
         job = queue.enqueue(facebook_delete_post,social_log,social_pas,need_url)
         test_url_list.remove(need_url)
-
+        print(test_url_list)
+        print(test_url_job_list)
         test_url_job_list.remove(need_url)
         print(test_url_job_list)
         list_join = "".join(test_url_job_list)
