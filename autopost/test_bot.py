@@ -224,6 +224,7 @@ def get_all_posts(driver):
 def delete_post(driver,url):
     test = get_mobile_post_url(driver,url)
     driver.get(test)
+
     print(test)
     time.sleep(3.5)
     print("get mobile irl success")

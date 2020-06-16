@@ -768,7 +768,9 @@ def go_to_post(post_id):
             db.session.commit()
 
 
-
+        if tmp == 0:
+            flash('You has no post on Facebook', 'danger')
+            return redirect(url_for('home'))
         url = post.link_post
         url_len = len(str(url)) / tmp
         print(str(url))
@@ -787,7 +789,9 @@ def go_to_post(post_id):
                 tmp=tmp-1
             except:
                 print("no one links")
+
         print(test_url_list)
+
         #posts = Post.query.filter_by(user_id=user.id).filter_by(notes=False).order_by(Post.date_posted.desc()).paginate(page, 10, False)
         return render_template('go_to_post.html', post=post,test_url_list=test_url_list)
     else:
