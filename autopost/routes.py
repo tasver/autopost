@@ -623,7 +623,7 @@ def publish_task(post_id):
                 print('its facebook')
                 #url = facebook_create_post(soc.login,soc.password,test_publish,test)
                 job = queue.enqueue(facebook_create_post,soc.login,soc.password,test_publish,test,result_ttl=-1)
-                post.job_id = str(job.id)
+                post.job_id = str(post.job_id) + str(job.id)
                 #print(job)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
@@ -702,7 +702,7 @@ def add_to_queue_task(post_id):
                 registry = ScheduledJobRegistry(queue=queue)
                 print(job in registry)
                 #print('Job id: %s' % job.id)
-                post.job_id = str(job.id)
+                post.job_id = str(post.job_id) + str(job.id)
                 #time.sleep(2)
                     #job2 = queue.enqueue_at(datetime(int(year), int(month), int(day), hour, int(minute)),get_res,job,post)
                 #result_job = job.result
@@ -751,26 +751,61 @@ def go_to_post(post_id):
             tmp = tmp+1
         #print(post.socials)
         #posts = posts2.paginate(page, 10, False)
-        if post.job_id!=None:
-            teeeeeeest = post.link_post
-
-            job = queue.fetch_job(post.job_id)
-            #job = post.job_id
-            print(job)
-            link_post_test = job.result
-            print(link_post_test)
-
-            teeeeeeest2 = str(link_post_test)
-            print(teeeeeeest2)
-
-            post.link_post = teeeeeeest2
-            #post.job_id = None
-            db.session.commit()
-
-
         if tmp == 0:
             flash('You has no post on Facebook', 'danger')
             return redirect(url_for('home'))
+
+        if post.job_id!=None:
+            teeeeeeest = post.link_post
+
+            test_job = post.job_id
+            print('test_job')
+            print(test_job)
+
+
+
+
+            teeeeeeest2 = str(link_post_test)
+            print(teeeeeeest2)
+            post.link_post = teeeeeeest2
+
+
+            job_id_len = len(str(test_job)) / tmp
+            print(str(test_job))
+            print(job_id_len)
+            job_id_len = int(job_id_len)
+            job_id_len_test = test_job[:job_id_len]
+            print(job_id_len_test)
+            test_url_list = ''
+            link_post_test_old = ''
+            n = 0
+            while tmp>0:
+                try:
+                    test_url = test_job[n:job_id_len_test]
+                    job = queue.fetch_job(test_url)
+                    print(job)
+                    link_post_test = job.result
+                    print(link_post_test)
+
+                    test_url_list = str(link_post_test_old) + str(link_post_test)
+
+                    print(test_url_list)
+                    n = n+job_id_len_test
+                    job_id_len_test = job_id_len_test+job_id_len_test
+                    tmp=tmp-1
+                    link_post_test_old = test_url_list
+                    print(test_url_list)
+                    post.link_post = test_url_list
+                    db.session.commit()
+                except:
+                    print("no one links")
+
+
+            #post.job_id = None
+
+
+
+
         url = post.link_post
         url_len = len(str(url)) / tmp
         print(str(url))
