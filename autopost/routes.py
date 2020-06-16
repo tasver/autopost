@@ -791,6 +791,8 @@ def go_to_post(post_id):
                     db.session.commit()
                 except:
                     print("no one links")
+                    flash('no one links', 'danger')
+                    return redirect(url_for('home'))
 
 
             #post.job_id = None
